@@ -1,0 +1,21 @@
+@font-face {
+  font-family: "American Typewriter";
+  font-style: normal;
+  font-weight: 600;
+  src: local("American Typewriter"),
+    url("./src/components/title/AmericanTypewriter.ttf") format("truetype");
+}
+@font-face {
+  font-family: "American Typewriter";
+  font-style: normal;
+  font-weight: 200;
+  src: local("American Typewriter regular"),
+    url("./src/components/title/AmericanTypewriterregular.ttf")
+      format("truetype");
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0px;
+}

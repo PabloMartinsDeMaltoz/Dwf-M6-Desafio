@@ -1,0 +1,28 @@
+{
+  "name": "05-Desafio",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "commonjs",
+  "scripts": {
+    "dev:front": "parcel serve  ./client/index.html",
+    "dev:backend": "nodemon --watch ./server/index.ts --exec ts-node ./server/index.ts",
+    "build:front": "parcel build  ./client/index.html",
+    "build:backend": "tsc",
+    "dev": "yarn concurrently \"yarn dev:front\" \"yarn dev:backend\"",
+    "build": "yarn build:front && yarn build:backend ",
+    "start": "node ./server/index.js"
+  },
+  "dependencies": {
+    "@types/node": "^18.8.3",
+    "concurrently": "^7.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.1",
+    "firebase": "^9.11.0",
+    "firebase-admin": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "parcel": "^2.7.0"
+  }
+}
