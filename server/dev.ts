@@ -1,8 +1,12 @@
 import * as express from "express";
 import * as dotenv from "dotenv";
-import { dist_dir } from "../dist/index";
 import * as cors from "cors";
 import { db } from "./db";
+import * as path from "path";
+
+const rutaRelativa = path.resolve(__dirname, "../dist", "index.html");
+
+console.log(rutaRelativa);
 
 dotenv.config();
 const port = process.env.PORT || 3000;
@@ -22,7 +26,7 @@ app.get("/env", (req, res) => {
 });
 
 app.use("*", (req, res) => {
-  res.sendFile(dist_dir + "/index.html");
+  res.sendFile(rutaRelativa);
 });
 
 app.listen(port, () => {

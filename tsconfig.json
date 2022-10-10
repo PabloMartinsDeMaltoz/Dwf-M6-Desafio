@@ -3,7 +3,8 @@
     "target": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "module": "CommonJS"
   },
-  "files": ["./server/index.ts"]
+  "files": ["./server/dev.ts"]
 }

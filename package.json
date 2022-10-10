@@ -5,7 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "dev:front": "parcel serve  ./client/index.html",
-    "dev:backend": "nodemon --watch ./server/index.ts --exec ts-node ./server/index.ts",
+    "dev:backend": "nodemon --watch ./server --exec ts-node ./server/dev.ts",
     "build:front": "parcel build  ./client/index.html",
     "build:backend": "tsc",
     "dev": "yarn concurrently \"yarn dev:front\" \"yarn dev:backend\"",
@@ -20,12 +20,14 @@
     "express": "^4.18.1",
     "firebase": "^9.11.0",
     "firebase-admin": "^11.1.0",
-    "typescript": "^4.8.4"
+    "ts-node": "~10.7.0",
+    "typescript": "~4.6.4"
   },
   "engines": {
     "node": "16.17.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.12",
     "nodemon": "^2.0.20",
     "parcel": "^2.7.0"
   }
