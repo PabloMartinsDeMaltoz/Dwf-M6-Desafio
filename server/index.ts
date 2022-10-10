@@ -15,9 +15,9 @@ app.get("/prueba", async (req, res) => {
   const querySnapshot = await db.collection("users").get();
   console.log(querySnapshot.docs[0].data());
 });
-
 app.get("/env", (req, res) => {
   console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+
   res.send(process.env.NODE_ENV);
 });
 
