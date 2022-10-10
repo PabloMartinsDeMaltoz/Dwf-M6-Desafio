@@ -10,10 +10,11 @@
     "build:backend": "tsc",
     "dev": "yarn concurrently \"yarn dev:front\" \"yarn dev:backend\"",
     "build": "yarn build:front && yarn build:backend ",
-    "start": "node ./server/index.js"
+    "start": "node ./server/dev.js"
   },
   "dependencies": {
     "@types/node": "^18.8.3",
+    "body-parser": "^1.20.1",
     "concurrently": "^7.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
