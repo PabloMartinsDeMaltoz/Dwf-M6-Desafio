@@ -1,5 +1,5 @@
 import { state } from "../../state";
-export function initPageA(params) {
+export function initPageWelcome(params) {
   const div = document.createElement("div");
   const style = document.createElement("style");
   const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
@@ -24,31 +24,42 @@ export function initPageA(params) {
      margin-top:74px;
      width: 300px;
    }
-   .boton{
-     margin-top:74px;
-     margin-bottom:86px;
-   }
-   @media (min-width:769px){
-    .boton{
-      margin-top:41px;
+  
+  .container-button{
+     margin-top:41px;
+     display:flex;
+     flex-direction: column;
+     gap:20px;    
     }
+   @media (min-width:769px){
+     .container-button{
+      gap:39px;
+     }
 }
 
   `;
   div.classList.add(".root");
   div.innerHTML = `
       <text-comp class="text" type="root">Piedra Papel o Tijera</text-comp>
-      <button-comp class="boton" >Empezar</button-comp>
+      <div class="container-button">
+      <button-comp class="boton-newgame">Nuevo juego</button-comp>
+      <button-comp class="boton-goroom">Ingresar a una sala</button-comp>
+      </div>
       <div class="hands">
        <manos-comp ></manos-comp>
       </div>
   `;
   div.classList.add("container");
   div.appendChild(style);
-  const buttonEl: any = div.querySelector(".boton");
+  const buttonEl: any = div.querySelector(".boton-newgame");
   buttonEl.addEventListener("click", (e) => {
     e.preventDefault();
-    params.goTo("/instruction");
+    params.goTo("/newGame");
+  });
+  const buttonElRoom: any = div.querySelector(".boton-goroom");
+  buttonElRoom.addEventListener("click", (e) => {
+    e.preventDefault();
+    params.goTo("/connectedRoom");
   });
   return div;
 }

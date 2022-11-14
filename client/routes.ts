@@ -1,13 +1,39 @@
-import { initPageA } from "./src/pages/pageA";
+import { initPageWelcome } from "./src/pages/welcome";
 import { initPageB } from "./src/pages/pageB";
 import { initPageC } from "./src/pages/pageC";
 import { initPageD } from "./src/pages/pageD";
 import { initPageE } from "./src/pages/pageE";
 import { state } from "./state";
+import { initPageNewGame } from "./src/pages/nuevo-juego";
+import { compartirSala } from "./src/pages/compartirSala";
+import { initPageConnectedRoom } from "./src/pages/connectedRoom";
+import { initPageLoginName } from "./src/pages/loginName";
+import { initPageFull } from "./src/pages/salaLlena";
+
 const routes = [
   {
     path: /welcome/,
-    component: initPageA,
+    component: initPageWelcome,
+  },
+  {
+    path: /newGame/,
+    component: initPageNewGame,
+  },
+  {
+    path: /connectedRoom/,
+    component: initPageConnectedRoom,
+  },
+  {
+    path: /loginName/,
+    component: initPageLoginName,
+  },
+  {
+    path: /compartirSala/,
+    component: compartirSala,
+  },
+  {
+    path: /fullRoom/,
+    component: initPageFull,
   },
   {
     path: /instruction/,
@@ -26,27 +52,19 @@ const routes = [
     component: initPageE,
   },
 ];
-const BASE_PATH = "/Desafio-M5";
-
-function isGithubPages() {
-  return location.host.includes("github.io");
-}
 
 export function initRoute(rootEl: Element) {
   function goTo(path) {
-    const completePath = isGithubPages() ? BASE_PATH + path : path;
-    history.pushState({}, "", completePath);
-    handleRoute(completePath);
-    console.log(completePath);
+    history.pushState({}, "", path);
+    handleRoute(path);
+    console.log(path);
   }
 
   function handleRoute(route) {
     for (const r of routes) {
       console.log("El handleRoute recibió una nueva ruta", route);
-      const newRoute = isGithubPages() ? route.replace(BASE_PATH, "") : route;
-      console.log(newRoute);
 
-      if (r.path.test(newRoute)) {
+      if (r.path.test(route)) {
         const el = r.component({ goTo: goTo });
         if (rootEl.firstChild) {
           rootEl.firstChild.remove();
@@ -55,7 +73,7 @@ export function initRoute(rootEl: Element) {
       }
     }
   }
-  if (location.pathname == "/Desafio-M5/" || location.pathname == "/") {
+  if (location.pathname == "/") {
     goTo("/welcome");
   } else {
     handleRoute(location.pathname);

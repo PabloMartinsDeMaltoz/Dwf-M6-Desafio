@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "piedra-papel-tijera-desafio6",
+  "private_key_id": "3056a6a390608c04a371a9e7ab79151947e4f0a8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCeXLIoSjZ6byyE\n48fKvmsxlQlXl+COX2HaiJTWRI49QonSkVnQ1t38lqiwmQvZTGxAwJRHXHjbzMoZ\nvrrgAE9CZSyFur5BO8NtGXVK3z1q466IlWs4TS/Ek7oN6V4ZxLVo63xteqEbFval\niDFgySD6PCxtC3s8gxZONmuHp/6HXK6UNbnZnonBxweqTRYtngnibVXzzcE65BIG\nmhfG4MyZXwBGkrmom0M863E0Qzzl+tj40pbvem8G229eSXo9xVRjpMK/MoX9jGJU\nAkf2uKjJQv5fZ7vOYfYo+O59OD/hMUe/dpF6cj83hFIOgqyVZuQ/y9Uixoes8Wg0\nGP/aUoL5AgMBAAECggEACHViDLXeEA8VHSn/d2xRVG4l+BhEJcahduc5r/IseMgv\njWA3IGkBpWa0ru4VzG8BDzpaES+2wuK+3r4pxCIwGZdG2AO/+sMC7rZf5fZjlOyB\nW4lDl1fEF+deFjUjUhQILoj5de2JYmWJGhFatdU4XjVNmCt3UyWbUOUmPDI0ba1n\nkswH0y7fFPUt/fueExV4Y8UZHfafaBpjqiPxWiRVL9ZSJN6dXk5rghcq4YaK3bYK\nR0YeTpySIHjxLhHVfvZrqjVjxXRD/fjRI566Xz0zg7D6tlT031rjxYXscceYmXHV\n8kgmx9KfTgCndmMmpKJR++mVh7ORPh3On4z1oZ2+CQKBgQDYi8mTfN1dHGRiLIU8\nBi+VIDi8suxkdFrT348L63QHpH7g3RnOGGRjaDidnE78z6zC1s6MW/FKVt+i6vjW\nBPH3eNQKK14GU+0DPxK+YdNqUR9GdVqJBuFS7qyiEaEuQJ4RmIyUY1V5+qxxEgrz\nujis3LQ/UCaG3mPaPchWSXc2tQKBgQC7NxLF6+749DP0f79KnfBzbLbtyj31IWGo\nmDUrz07Vi5ByQdDO0/ysrIk3Xl4wyK6MguMgNOlLhIBXCRbTVYlFP91DwoW9L6bS\norZr7chWkwQh3ED2Dn6wuh6FHp2DaxVbzn1h57rM3vG71PfGVAjWSWrsgBaEsA2X\nhC+X3L2htQKBgQC0xY1TeGt7bVZHto7LGwbh4PI8ZMl+2rtwIDLUaoyETMg2g50l\nNauoaLrKqFAwMFYymQv4lFCMFJXA9ZMhZyNvygiJLMbjVXCIw0CsehH5sRsAwLsB\npSK5DtJCwaDiccMDQWwp+/rBR4hpI/zMlmr1s5EtQYXIFSMab3Usw0un+QKBgQCI\nUYmx5CGV1PsfxQUc5/P1l+t7KhADNdNOV8YfqEvW4lDDYXkRoPoTIW6oimY7T2UJ\nmySWhvB4tHpe5ZdhOp9BdUc/15xaLSBjr2b1H6cIovQXU7FZeSR2uo8Oj0RSNN7Q\ngoJ5j6pNEukhw+jG2Nm2bq8Ulg/PfgHnmbCt+2V5IQKBgQDP6uEMwutdGPGcIWT0\nRtBmkVGMfi4nCUVRsutGtSD5pqSQ4sKIkFAmvmi3WpS9x0JzYKVLo/I/sdx0tAbx\ni2SZeGPfI0Mv1VIwJ8x/2eZH9rNJqiXv4NSWJtHO8v/EwDltj+R3SgL6wrmgkWCB\nYH6ZlrvhEIFCUibjSAsn1GHTnQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-uihta@piedra-papel-tijera-desafio6.iam.gserviceaccount.com",
+  "client_id": "110431102370997095775",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-uihta%40piedra-papel-tijera-desafio6.iam.gserviceaccount.com"
+}

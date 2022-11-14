@@ -39,12 +39,12 @@ export function initPageB(params) {
        <manos-comp ></manos-comp>
       </div>
   `;
-  div.classList.add("container");
-  div.appendChild(style);
-  const buttonEl:any = div.querySelector(".boton");
+  const buttonEl: any = div.querySelector(".boton");
   buttonEl.addEventListener("click", (e) => {
     e.preventDefault();
     params.goTo("/play");
   });
+  div.classList.add("container");
+  div.appendChild(style);
   return div;
 }
