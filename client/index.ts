@@ -11,7 +11,7 @@ import { state } from "./state";
 
 function main() {
   const rootEl: any = document.querySelector(".root");
-  state.init();
+ // state.init();
   titleComp();
   buttonComp();
   manosComp();

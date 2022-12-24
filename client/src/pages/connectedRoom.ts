@@ -1,5 +1,7 @@
 import { LogError } from "concurrently";
 import { state } from "../../state";
+
+
 export function initPageConnectedRoom(params) {
   const div = document.createElement("div");
   const style = document.createElement("style");

@@ -1,4 +1,6 @@
+import { async } from "@firebase/util";
 import { LogError } from "concurrently";
+import { limitToFirst } from "firebase/database";
 import { state } from "../../state";
 export function initPageNewGame(params) {
   const div = document.createElement("div");
@@ -48,28 +50,28 @@ export function initPageNewGame(params) {
        <manos-comp ></manos-comp>
       </div>
   `;
+  function goToCompartirSala() {
+    const listenRtdb = state.listenRtdb(() => {
+      params.goTo("/fullRoom");
+    },()=>{
+      params.goTo("/instruction");
+    },()=>{
+      params.goTo("/compartirSala");
+    })
+  }
+
+  async function setNameRoom(name: string) {
+    let id = await state.setName(name);
+    let shortId = await state.newRoom();
+    let rtdbId = await state.getRtdb();
+    goToCompartirSala();
+  }
   const formEl = div.querySelector(".form");
   formEl.addEventListener("submit", (e) => {
     e.preventDefault();
     const target = e.target as any;
     const name = target.name.value;
-    state.setName(name, () => {
-      state.newRoom(name, () => {
-        state.getRtdb(() => {
-          state.listenRtdb(() => {
-           goToCompartirSala()
-          });
-        });
-      });
-    });
-    function goToCompartirSala() {
-      const currentData = state.getData();
-      if (currentData.userId && currentData.rtdbData.currentGame) {
-        params.goTo("/compartirSala");
-     } else {
-       alert("Ingrese otro nombre de usuario");
-     }
-    }
+    setNameRoom(name);
   });
 
   div.classList.add("container");

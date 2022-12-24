@@ -2,6 +2,8 @@ import { throws } from "assert";
 import { getDatabase, ref, onValue, app } from "./db";
 import { onDisconnect } from "firebase/database";
 import map from "lodash/map";
+import { callbackify } from "util";
+
 type move = "piedra" | "papel" | "tijera" | "";
 type game = {
   myMove: "";
@@ -14,26 +16,51 @@ export const state = {
     userId: "",
     shortId: "",
     name: "",
+
     roomFull: false,
   },
   liseners: [],
   timer: "open",
 
-  listenRtdb(callback) {
+  listenRtdb(callbackFullRoom, callbackInstrucciones, callbackCompSala) {
     const currentData = this.getData();
     const db = getDatabase(app);
-    console.log(currentData.rtdbId);
-
-    const roomRef = ref(db, "rooms/" + currentData.rtdbId);
+    const roomRef = ref(db, "rooms/" + currentData.rtdbRoomId);
+    console.log(currentData);
 
     onValue(roomRef, (snapshot) => {
       const data = snapshot.val();
       currentData.rtdbData = data;
-      this.setData(currentData);
-      console.log(data);
-      console.log(currentData);
-      callback();
+
+      if (currentData.rtdbData.currentGame) {
+        currentData.listenRtdb = true;
+        this.setData(currentData);
+        let playersOn = this.playersOnline();
+
+        playersOn
+          .then((r) => {
+            return r;
+          })
+          .then((res) => {
+            console.log(res.length, "soy el lenght");
+            console.log(location.pathname, "soy el pathname");
+
+            if (location.pathname == "/newGame" && res.length <= 2) {
+              callbackCompSala();
+            } else if (
+              (location.pathname == "/instruction" && res.length > 2) ||
+              (location.pathname == "/compartirSala" && res.length == 2) ||
+              (location.pathname == "/loginName" && res.length <= 2)
+            ) {
+              callbackInstrucciones();
+            } else {
+              callbackFullRoom();
+            }
+          });
+      }
     });
+
+    return currentData;
     /*
     const connectedRef = ref(db, ".info/connected")
     onValue(connectedRef, (snap) => {
@@ -53,71 +80,110 @@ export const state = {
       this.setData(data);
     } else this.setData(this.data);
   },
-  getRtdb(callback) {
-    const currentData = this.getData();
-    fetch("/rooms/" + currentData.shortId + "?userId=" + currentData.userId, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        currentData.rtdbId = data.rtdbRoomId;
-        state.setData(currentData);
-        console.log(currentData);
-        callback();
-      });
+  async getRtdb() {
+    const currentData = await this.getData();
+
+    let response = await fetch(
+      "/rooms/" + currentData.shortId + "?userId=" + currentData.userId,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.ok) {
+      let id = await response.json();
+      currentData.rtdbRoomId = id.rtdbRoomId;
+      this.setData(currentData);
+    }
+    return currentData;
   },
-  newRoom(name, callback) {
+  async newRoom() {
+    const currentData = await this.getData();
+    try {
+      const newRoom = await fetch("/rooms", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(currentData),
+      });
+      if (newRoom.ok) {
+        const respuesta = await newRoom.json();
+        currentData.shortId = respuesta.shortId;
+        this.setData(currentData);
+      }
+
+      /*
+        .then((response) => response.json())
+        .then((data) => {
+          currentData.shortId = data.shortId;
+          this.setData(currentData);
+        });
+      */
+    } catch (error) {
+      console.log("algo salio mal");
+    }
+    return currentData;
+  },
+
+  async playersOnline() {
+    const currentData = await this.getData();
+    console.log(currentData.rtdbData, "la data del momento");
+
+    let players = map(currentData.rtdbData.currentGame);
+    console.log(players, "los players existentes");
+
+    let playersOnline = players.filter((e) => {
+      return e.online;
+    });
+    console.log(playersOnline, playersOnline.length, "son los players online");
+
+    return playersOnline;
+  },
+  setPlayer() {
     const currentData = this.getData();
     console.log(currentData);
 
-    fetch("/rooms", {
+    fetch("/rooms/" + currentData.shortId + "?userId=" + currentData.userId, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(currentData),
     })
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => {
-        currentData.shortId = data.shortId;
+        currentData.roomFull = true;
+        state.setData(currentData);
         console.log(currentData);
-        this.setData(currentData);
-        callback();
+      })
+      .catch((err) => {
+        console.log(err);
       });
   },
-  setPlayer(callback) {
+  setStart() {
     const currentData = this.getData();
-    console.log(currentData.rtdbData);
-    let players = map(currentData.rtdbData.currentGame);
-    let playersOnline = players.filter((e) => {
-      return e.online == true;
-    });
-    console.log(playersOnline.length);
-    if (playersOnline.length < 2) {
-      fetch("/rooms/" + currentData.shortId + "?userId=" + currentData.userId, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(currentData),
+    currentData.start = true;
+    console.log(currentData);
+
+    fetch("/setscore", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(currentData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+       
+        state.setData(currentData);
+        console.log(currentData);
       })
-        .then((res) => res.json())
-        .then((data) => {
-          currentData.roomFull = false;
-          state.setData(currentData);
-          console.log(currentData);
-          callback();
-        });
-    } else {
-      console.log("sala llena");
-      currentData.roomFull = true;
-      state.setData(currentData);
-      callback();
-    }
+      .catch((err) => {
+        console.log(err);
+      });
   },
   getData() {
     return this.data;
@@ -127,17 +193,13 @@ export const state = {
     for (const cb of this.liseners) {
       cb();
     }
-    // console.log(this.data, "soy la data para storage");
-    // console.log(newData);
-    state.getData();
-
-    const localStorageDatos = {
+    /* const localStorageDatos = {
       name: newData.name,
       userId: newData.userId,
       shortId: newData.shortId,
     };
-
     localStorage.setItem("user", JSON.stringify(localStorageDatos));
+  }*/
   },
   setMyMove(myMove) {
     const currentData = this.getData();
@@ -158,30 +220,27 @@ export const state = {
       });
     }
   },
-  setName(name, callback) {
-    const currentData = this.getData();
-
-    if (currentData.name !== name) {
-      state.getData();
-      fetch("/signup", {
+  async setName(nombre) {
+    const currentData = await this.getData();
+    try {
+      const response = await fetch("/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: name }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const id = data.userId;
-          currentData.name = name;
-          currentData.userId = id;
-          console.log(currentData);
-
-          this.setData(currentData);
-          callback();
-          console.log("Success:", id);
-        });
+        body: JSON.stringify({ name: nombre }),
+      });
+      if (response.ok) {
+        const respuesta = await response.json();
+        currentData.name = nombre;
+        currentData.userId = respuesta.userId;
+        this.setData(currentData);
+      }
+    } catch (error) {
+      alert("user already exist");
+      console.log(error);
     }
+    return currentData;
   },
 
   result(moves) {

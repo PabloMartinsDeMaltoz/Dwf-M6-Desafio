@@ -6,7 +6,28 @@ export function compartirSala(params) {
   const div = document.createElement("div");
   const style = document.createElement("style");
   const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
+
   const currentData = state.getData();
+  
+  let playersOn = state.playersOnline();
+  playersOn
+    .then((r) => {
+      return r;
+    })
+    .then((res) => {
+      console.log(res);
+      state.subscribe(() => {
+        if (res.length == 2) {
+          console.log("se lleno podemos jugar");
+          currentData.roomFull = true;
+          state.setData(currentData);
+          console.log(currentData);
+
+          params.goTo("/instruction");
+        }
+      });
+    });
+
   style.innerHTML = `
   .root {
   background-image: url(${bgurl});
@@ -54,17 +75,6 @@ export function compartirSala(params) {
 
   div.classList.add("container");
   div.appendChild(style);
-
-  let players = map(currentData.rtdbData.currentGame);
-  let playersOnline = players.filter((e) => {
-    return e.online == true;
-  });
-  console.log(playersOnline.length);
-  if (playersOnline.length == 2) {
-    console.log("se lleno podemos jugar");
-
-    params.goTo("/instruction");
-  }
 
   return div;
 }

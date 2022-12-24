@@ -1,5 +1,5 @@
 import { initPageWelcome } from "./src/pages/welcome";
-import { initPageB } from "./src/pages/pageB";
+import { instruction } from "./src/pages/instruction";
 import { initPageC } from "./src/pages/pageC";
 import { initPageD } from "./src/pages/pageD";
 import { initPageE } from "./src/pages/pageE";
@@ -37,7 +37,7 @@ const routes = [
   },
   {
     path: /instruction/,
-    component: initPageB,
+    component: instruction,
   },
   {
     path: /play/,
@@ -56,6 +56,9 @@ const routes = [
 export function initRoute(rootEl: Element) {
   function goTo(path) {
     history.pushState({}, "", path);
+    window.onpopstate = function () {
+      handleRoute(location.pathname);
+    };
     handleRoute(path);
     console.log(path);
   }
@@ -65,7 +68,7 @@ export function initRoute(rootEl: Element) {
       console.log("El handleRoute recibió una nueva ruta", route);
 
       if (r.path.test(route)) {
-        const el = r.component({ goTo: goTo });
+        const el = r.component({ goTo: goTo }) as any;
         if (rootEl.firstChild) {
           rootEl.firstChild.remove();
         }

@@ -1,5 +1,6 @@
 import { LogError } from "concurrently";
 import { state } from "../../state";
+import map from "lodash/map";
 
 export function initPageLoginName(params) {
   const div = document.createElement("div");
@@ -49,35 +50,36 @@ export function initPageLoginName(params) {
        <manos-comp ></manos-comp>
       </div>
   `;
+  function goToCompartirSala() {
+    const listenRtdb = state.listenRtdb(
+      () => {
+        params.goTo("/fullRoom");
+      },
+      () => {
+        params.goTo("/instruction");
+      },
+      () => {
+        params.goTo("/compartirSala");
+      }
+    );
+  }
+
+  async function setNameAndConnectedRoom(name: string) {
+    let id = await state.setName(name);
+    state.setPlayer();
+    let rtdbId = await state.getRtdb();
+    goToCompartirSala();
+  }
   const formEl = div.querySelector(".form");
   formEl.addEventListener("submit", (e) => {
     e.preventDefault();
+    const currentData = state.getData();
     const target = e.target as any;
     const name = target.name.value;
-    state.setName(name, () => {
-      state.getRtdb(() => {
-        state.listenRtdb(() => {
-          state.setPlayer(() => {
-            goToCompartirSala();
-          });
-        });
-      });
-    });
-    function goToCompartirSala() {
-      const currentData = state.getData();
+    setNameAndConnectedRoom(name);
 
-      if (currentData.roomFull == false) {
-        params.goTo("/compartirSala");
-        currentData.roomFull = true;
-        state.setData(currentData);
-      } else {
-        params.goTo("/fullRoom");
-      }
-    }
+    div.classList.add("container");
+    div.appendChild(style);
   });
-
-  div.classList.add("container");
-  div.appendChild(style);
-
   return div;
 }

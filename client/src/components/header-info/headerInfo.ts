@@ -92,7 +92,6 @@ export function headerInfoComp() {
          </header>
      `;
       if (this.firstChild) {
-        console.log(this.firstChild);
         this.lastChild.remove();
         this.firstChild.remove();
         this.appendChild(divEl);

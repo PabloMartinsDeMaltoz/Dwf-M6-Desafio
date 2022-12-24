@@ -1,4 +1,6 @@
-export function initPageB(params) {
+import { state } from "../../state";
+
+export function instruction(params) {
   const div = document.createElement("div");
   const style = document.createElement("style");
   const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
@@ -42,6 +44,10 @@ export function initPageB(params) {
   const buttonEl: any = div.querySelector(".boton");
   buttonEl.addEventListener("click", (e) => {
     e.preventDefault();
+    state.setStart();
+    const currentData = state.getData();
+    console.log(currentData);
+
     params.goTo("/play");
   });
   div.classList.add("container");
