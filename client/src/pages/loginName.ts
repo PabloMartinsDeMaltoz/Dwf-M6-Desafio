@@ -24,7 +24,7 @@ export function initPageLoginName(params) {
         bottom: -37px;
   }
    .text{
-     margin-top:74px;
+     margin-top:-40px;
      width: 300px;
    }
   
@@ -34,24 +34,26 @@ export function initPageLoginName(params) {
      flex-direction: column;
      gap:20px;    
     }
-   @media (min-width:769px){
-     .container-button{
-      gap:39px;
-     }
-  
-}
+    @media (min-width:769px){
+      .container-button{
+        gap:39px;
+      }
+    }
+    `;
 
-  `;
   div.classList.add(".root");
+
   div.innerHTML = `
+  <div class="container">
       <text-comp class="text" type="root">Piedra Papel o Tijera</text-comp>
       <input-comp  type="nombre" class="inputComp"></input-comp>
       <div class="hands">
        <manos-comp ></manos-comp>
       </div>
+  </div>
   `;
   function goToCompartirSala() {
-    const listenRtdb = state.listenRtdb(
+    state.listenRtdb(
       () => {
         params.goTo("/fullRoom");
       },
@@ -60,15 +62,22 @@ export function initPageLoginName(params) {
       },
       () => {
         params.goTo("/compartirSala");
+      },
+      () => {
+        params.goTo("/play");
       }
     );
   }
 
   async function setNameAndConnectedRoom(name: string) {
     let id = await state.setName(name);
-    state.setPlayer();
-    let rtdbId = await state.getRtdb();
-    goToCompartirSala();
+    if (id.name == "") {
+      alert("este user no esta disponible");
+    } else {
+      state.setPlayer();
+      let rtdbId = await state.getRtdb();
+      goToCompartirSala();
+    }
   }
   const formEl = div.querySelector(".form");
   formEl.addEventListener("submit", (e) => {
@@ -77,9 +86,9 @@ export function initPageLoginName(params) {
     const target = e.target as any;
     const name = target.name.value;
     setNameAndConnectedRoom(name);
-
-    div.classList.add("container");
-    div.appendChild(style);
   });
+  div.classList.add(".container");
+  div.appendChild(style);
+
   return div;
 }

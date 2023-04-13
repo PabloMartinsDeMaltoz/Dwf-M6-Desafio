@@ -1,7 +1,6 @@
 import { LogError } from "concurrently";
 import { state } from "../../state";
 
-
 export function initPageConnectedRoom(params) {
   const div = document.createElement("div");
   const style = document.createElement("style");
@@ -24,7 +23,7 @@ export function initPageConnectedRoom(params) {
         bottom: -37px;
   }
    .text{
-     margin-top:74px;
+     margin-top:-40px;
      width: 300px;
    }
   
@@ -54,11 +53,13 @@ export function initPageConnectedRoom(params) {
   `;
   div.classList.add(".root");
   div.innerHTML = `
+  <div class="container">
       <text-comp class="text" type="root">Piedra Papel o Tijera</text-comp>
       <input-comp  class="inputComp"></input-comp>
       <div class="hands">
        <manos-comp ></manos-comp>
       </div>
+  </div>
   `;
   const formEl = div.querySelector(".form");
   formEl.addEventListener("submit", (e) => {
@@ -68,10 +69,13 @@ export function initPageConnectedRoom(params) {
     const code = target.name.value;
     currentData.shortId = code;
     state.setData(currentData);
-    params.goTo("/loginName");
+    
+    state.getRoom(currentData.shortId, (): any => {
+      params.goTo("/loginName");
+    });
   });
 
-  div.classList.add("container");
+  div.classList.add(".container");
   div.appendChild(style);
 
   return div;

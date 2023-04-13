@@ -24,7 +24,7 @@ export function initPageNewGame(params) {
         bottom: -37px;
   }
    .text{
-     margin-top:74px;
+     margin-top:-40px;;
      width: 300px;
    }
   
@@ -50,21 +50,33 @@ export function initPageNewGame(params) {
        <manos-comp ></manos-comp>
       </div>
   `;
-  function goToCompartirSala() {
-    const listenRtdb = state.listenRtdb(() => {
-      params.goTo("/fullRoom");
-    },()=>{
-      params.goTo("/instruction");
-    },()=>{
-      params.goTo("/compartirSala");
-    })
+  function goTo() {
+    state.listenRtdb(
+      () => {
+        params.goTo("/fullRoom");
+      },
+      () => {
+        params.goTo("/instruction");
+      },
+      () => {
+        params.goTo("/compartirSala");
+      },
+      () => {
+        params.goTo("/play");
+      }
+    );
   }
 
   async function setNameRoom(name: string) {
     let id = await state.setName(name);
-    let shortId = await state.newRoom();
-    let rtdbId = await state.getRtdb();
-    goToCompartirSala();
+    if (id.name == "") {
+      alert("este user no esta disponible");
+    } else {
+      let shortId = await state.newRoom();
+      let rtdbId = await state.getRtdb();
+      state.getHistory();
+      goTo();
+    }
   }
   const formEl = div.querySelector(".form");
   formEl.addEventListener("submit", (e) => {

@@ -1,85 +1,99 @@
 import { throws } from "assert";
 import { getDatabase, ref, onValue, app } from "./db";
-import { onDisconnect } from "firebase/database";
+import { limitToFirst, onDisconnect } from "firebase/database";
 import map from "lodash/map";
+import filter from "lodash/filter";
 import { callbackify } from "util";
 
 type move = "piedra" | "papel" | "tijera" | "";
 type game = {
   myMove: "";
-  pcMove: "";
+  opponentMove: "";
 };
 
 export const state = {
   data: {
+    myMove: "",
+    opponentMove: "",
+
     rtdbData: {},
     userId: "",
     shortId: "",
     name: "",
-
+    start: false,
     roomFull: false,
+    opponentHistory: {
+      victorias: 0,
+      perdidas: 0,
+    },
+    history: {
+      name: {
+        score: {
+          victorias: 0,
+          perdidas: 0,
+        },
+      },
+      opponentName: {
+        score: {
+          victorias: 0,
+          perdidas: 0,
+        },
+      },
+    },
+    opponentName: "",
+    result: "",
   },
   liseners: [],
   timer: "open",
 
-  listenRtdb(callbackFullRoom, callbackInstrucciones, callbackCompSala) {
+  listenRtdb(
+    callbackFullRoom,
+    callbackInstrucciones,
+    callbackCompSala,
+    callbackPlay
+  ) {
     const currentData = this.getData();
     const db = getDatabase(app);
     const roomRef = ref(db, "rooms/" + currentData.rtdbRoomId);
-    console.log(currentData);
 
     onValue(roomRef, (snapshot) => {
       const data = snapshot.val();
       currentData.rtdbData = data;
+      let localStor = JSON.parse(localStorage.getItem("user"));
 
       if (currentData.rtdbData.currentGame) {
         currentData.listenRtdb = true;
         this.setData(currentData);
         let playersOn = this.playersOnline();
+        let playersStartOn = this.playersStart();
+        let movesPlayers = this.playersMoves();
 
-        playersOn
-          .then((r) => {
-            return r;
-          })
-          .then((res) => {
-            console.log(res.length, "soy el lenght");
-            console.log(location.pathname, "soy el pathname");
-
-            if (location.pathname == "/newGame" && res.length <= 2) {
+        Promise.all([playersOn, playersStartOn, movesPlayers]).then(
+          (values) => {
+            if (location.pathname == "/newGame" && values[0].length <= 2) {
               callbackCompSala();
             } else if (
-              (location.pathname == "/instruction" && res.length > 2) ||
-              (location.pathname == "/compartirSala" && res.length == 2) ||
-              (location.pathname == "/loginName" && res.length <= 2)
+              (location.pathname == "/compartirSala" &&
+                values[0].length == 2) ||
+              (location.pathname == "/loginName" && values[0].length == 2)
             ) {
               callbackInstrucciones();
-            } else {
+            } else if (location.pathname == "/wait" && values[1].length == 2) {
+              if (!currentData.historyBD) {
+                callbackPlay();
+              } else {
+                callbackPlay();
+              }
+            } else if (values[0].length > 2) {
               callbackFullRoom();
             }
-          });
+          }
+        );
+        return currentData;
       }
     });
-
-    return currentData;
-    /*
-    const connectedRef = ref(db, ".info/connected")
-    onValue(connectedRef, (snap) => {
-      if (snap.val() === true) {
-        const currentGame = currentData.rtdbData.currentGame;
-        let userConnected = map(currentGame, (user) => {});
-        console.log("connected");
-      } else {
-        console.log("not connected");
-      }
-    })*/
   },
 
-  init() {
-    const data = JSON.parse(localStorage.getItem("user"));
-    if (data) {
-      this.setData(data);
-    } else this.setData(this.data);
-  },
   async getRtdb() {
     const currentData = await this.getData();
 
@@ -99,6 +113,18 @@ export const state = {
     }
     return currentData;
   },
+
+  async rtdbOnlineOff() {
+    const currentData = await this.getData();
+    let response = await fetch("/playeroff/" + currentData.shortId, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(currentData),
+    });
+  },
+
   async newRoom() {
     const currentData = await this.getData();
     try {
@@ -114,37 +140,78 @@ export const state = {
         currentData.shortId = respuesta.shortId;
         this.setData(currentData);
       }
-
-      /*
-        .then((response) => response.json())
-        .then((data) => {
-          currentData.shortId = data.shortId;
-          this.setData(currentData);
-        });
-      */
     } catch (error) {
-      console.log("algo salio mal");
+      console.log("algo salio mal al crear el room");
     }
     return currentData;
+  },
+  async getRoom(roomId, callback?) {
+    const currentData = await this.getData();
+    const room = await fetch("/room/" + roomId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (room.ok) {
+      const res = await room.json();
+
+      callback();
+    } else {
+      alert("no existe la room");
+    }
+  },
+  async playersMoves() {
+    const currentData = await this.getData();
+
+    let players = map(currentData.rtdbData.currentGame);
+    //console.log(players, "los players existentes");
+
+    let playersMoves = players.filter((e) => {
+      return e.choice;
+    });
+
+    let localStor = JSON.parse(localStorage.getItem("user"));
+
+    if (playersMoves.length == 2) {
+      const myPlay = playersMoves.filter((e) => {
+        return e.name == localStor.name;
+      });
+      const opponentMove = playersMoves.filter((e) => {
+        return e.name !== localStor.name;
+      });
+
+      currentData.myMove = myPlay[0].choice;
+      currentData.opponentMove = opponentMove[0].choice;
+      currentData.opponentName = opponentMove[0].name;
+      state.setData(currentData);
+      state.getData();
+    }
+    return playersMoves;
   },
 
   async playersOnline() {
     const currentData = await this.getData();
-    console.log(currentData.rtdbData, "la data del momento");
 
     let players = map(currentData.rtdbData.currentGame);
-    console.log(players, "los players existentes");
 
     let playersOnline = players.filter((e) => {
       return e.online;
     });
-    console.log(playersOnline, playersOnline.length, "son los players online");
 
     return playersOnline;
   },
+  async playersStart() {
+    const currentData = await this.getData();
+    let players = map(currentData.rtdbData.currentGame);
+    let playersStart = players.filter((e) => {
+      return e.start == true;
+    });
+
+    return playersStart;
+  },
   setPlayer() {
     const currentData = this.getData();
-    console.log(currentData);
 
     fetch("/rooms/" + currentData.shortId + "?userId=" + currentData.userId, {
       method: "POST",
@@ -157,29 +224,29 @@ export const state = {
       .then((data) => {
         currentData.roomFull = true;
         state.setData(currentData);
-        console.log(currentData);
-      })
-      .catch((err) => {
-        console.log(err);
       });
   },
-  setStart() {
+  setStart(estado, callbackWait?) {
     const currentData = this.getData();
-    currentData.start = true;
-    console.log(currentData);
+    const datos = {
+      start: estado,
+      shortId: currentData.shortId,
+      userId: currentData.userId,
+    };
+    console.log(currentData, "el currentData Set PLAYER");
 
-    fetch("/setscore", {
+    fetch("/setstart", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(currentData),
+      body: JSON.stringify(datos),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        res.json();
+      })
       .then((data) => {
-       
-        state.setData(currentData);
-        console.log(currentData);
+        callbackWait();
       })
       .catch((err) => {
         console.log(err);
@@ -193,13 +260,19 @@ export const state = {
     for (const cb of this.liseners) {
       cb();
     }
-    /* const localStorageDatos = {
+    const localStorageDatos = {
       name: newData.name,
+      opponentName: newData.opponentName,
       userId: newData.userId,
       shortId: newData.shortId,
+      start: newData.start,
+      moves: {
+        myMove: newData.myMove,
+        opponentMove: newData.opponentMove,
+      },
+      history: newData.history,
     };
     localStorage.setItem("user", JSON.stringify(localStorageDatos));
-  }*/
   },
   setMyMove(myMove) {
     const currentData = this.getData();
@@ -207,18 +280,29 @@ export const state = {
       ...currentData,
       myMove,
     });
-  },
-  setPcMove() {
-    const currentData = this.getData();
-    const moves = ["piedra", "papel", "tijera"];
-    const numberAleatorio = Math.floor(Math.random() * (4 - 1));
-    const pcMove = moves[numberAleatorio];
-    if (this.timer == "open") {
-      this.setData({
-        ...currentData,
-        pcMove,
+    const datos = {
+      myMove: myMove,
+      shortId: currentData.shortId,
+      userId: currentData.userId,
+    };
+
+    fetch("/setmove", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(datos),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        currentData.myMove = data.choice;
+        state.setData(currentData);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    }
   },
   async setName(nombre) {
     const currentData = await this.getData();
@@ -236,25 +320,80 @@ export const state = {
         currentData.userId = respuesta.userId;
         this.setData(currentData);
       }
-    } catch (error) {
-      alert("user already exist");
-      console.log(error);
+    } catch (err) {
+      console.log(err);
+
+      console.log("algo salio mal al crear el newUser");
     }
     return currentData;
   },
-
-  result(moves) {
-    this.init();
+  getOpponnetInfo() {
     const currentData = this.getData();
-    const ganeConPiedra = moves.myMove == "piedra" && moves.pcMove == "tijera";
-    const ganeConPapel = moves.myMove == "papel" && moves.pcMove == "piedra";
-    const ganeConTijera = moves.myMove == "tijera" && moves.pcMove == "papel";
+    const currentGame = currentData.rtdbData.currentGame;
+    const opponent = filter(currentGame, (e) => {
+      return e.name !== currentData.name;
+    });
+    const opponentName = opponent[0].name;
+    currentData.opponentName = opponentName;
+    this.setData(currentData);
+  },
+  async getHistory() {
+    const currentData = await this.getData();
+    const result = await fetch("/getscore/" + currentData.shortId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (result.ok) {
+      const historialBd = await result.json();
+      currentData.history = historialBd;
+      this.setData(currentData);
+    } else {
+      const historialBd = await result.json();
+      const myScore = {
+        [currentData.name]: { score: { victorias: 0, perdidas: 0 } },
+        [currentData.opponentName ? currentData.opponentName : "offline"]: {
+          score: { victorias: 0, perdidas: 0 },
+        },
+      };
+      currentData.history = myScore;
+      this.setData(currentData);
+    }
+  },
+  async setHistory(history) {
+    const currentData = await this.getData();
+    const respuesta = await fetch("/setscore/" + currentData.shortId, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(history),
+    });
+    if (respuesta.ok) {
+      const resultadoBD = await respuesta.json();
+      console.log(resultadoBD);
+    }
+  },
 
-    const perdiConPiedra = moves.myMove == "piedra" && moves.pcMove == "papel";
-    const perdiConPapel = moves.myMove == "papel" && moves.pcMove == "tijera";
-    const perdiConTijera = moves.myMove == "tijera" && moves.pcMove == "piedra";
+  async setResult() {},
+  result(moves) {
+    const currentData = this.getData();
+    const ganeConPiedra =
+      moves.myMove == "piedra" && moves.opponentMove == "tijera";
+    const ganeConPapel =
+      moves.myMove == "papel" && moves.opponentMove == "piedra";
+    const ganeConTijera =
+      moves.myMove == "tijera" && moves.opponentMove == "papel";
 
-    const empate = moves.myMove == moves.pcMove;
+    const perdiConPiedra =
+      moves.myMove == "piedra" && moves.opponentMove == "papel";
+    const perdiConPapel =
+      moves.myMove == "papel" && moves.opponentMove == "tijera";
+    const perdiConTijera =
+      moves.myMove == "tijera" && moves.opponentMove == "piedra";
+
+    const empate = moves.myMove == moves.opponentMove;
 
     const arrayResults = [
       ganeConPapel,
@@ -268,16 +407,19 @@ export const state = {
 
     for (let index = 0; index < arrayResults.length; index++) {
       const element = arrayResults[index];
+
       if (element == true && (index == 0 || index == 1 || index == 2)) {
-        currentData.currentGame = "victoria";
-        currentData.history.victorias++;
+        currentData.result = "victoria";
+        currentData.history[currentData.name].score.victorias++;
+        currentData.history[currentData.opponentName].score.perdidas++;
         this.setData(currentData);
       } else if (element == true && (index == 3 || index == 4 || index == 5)) {
-        currentData.currentGame = "perdiste";
-        currentData.history.perdidas++;
+        currentData.result = "perdiste";
+        currentData.history[currentData.name].score.perdidas++;
+        currentData.history[currentData.opponentName].score.victorias++;
         this.setData(currentData);
       } else if (element == true && index == 6) {
-        currentData.currentGame = "empate";
+        currentData.result = "empate";
         this.setData(currentData);
       }
     }

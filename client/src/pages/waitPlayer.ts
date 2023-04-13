@@ -1,33 +1,42 @@
-import { LogError } from "concurrently";
 import { state } from "../../state";
-import map from "lodash/map";
-
-export function compartirSala(params) {
+import filter from "lodash/filter";
+export function waitPlayer(params) {
   const div = document.createElement("div");
   const style = document.createElement("style");
   const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
-  
   const currentData = state.getData();
+ 
 
-  /* let playersOn = state.playersOnline();
-  playersOn
+  function goTo() {
+    state.listenRtdb(
+      () => {
+        params.goTo("/fullRoom");
+      },
+      () => {
+        params.goTo("/instruction");
+      },
+      () => {
+        params.goTo("/compartirSala");
+      },
+      () => {
+        params.goTo("/play");
+      }
+    );
+  }
+
+  let playersOnStart = state.playersStart();
+  playersOnStart
     .then((r) => {
       return r;
     })
     .then((res) => {
-      console.log(res);
-      state.subscribe(() => {
-        if (res.length == 2) {
-          console.log("se lleno podemos jugar");
-          currentData.roomFull = true;
-          state.setData(currentData);
-          console.log(currentData);
-
-       //   params.goTo("/instruction");
-        }
-      });
+      console.log(res, "SOY LA RES DESDE PAGINA WAIT PLAYER");
+      if (!currentData.history) {
+        state.getHistory();
+      }
+      goTo();
     });
-*/
+
   style.innerHTML = `
   .root {
   background-image: url(${bgurl});
@@ -51,21 +60,17 @@ export function compartirSala(params) {
   .hands{
         position: relative;
         bottom: -37px;
-  }
-   
-}
+}  
+`;
 
-  `;
-  div.classList.add(".root");
   div.innerHTML = `
+      
       <div class="container">
          <headerinfo-comp></headerinfo-comp>
          <section class="section">
-           <div class="section__codigo">
-            <p>comparti tu codigo</p>
-            <strong>${currentData.shortId}</strong>
-            <p>con tu contrincante</p>          
-           </div>
+          <div class="section__codigo">
+           <text-comp class="text" type="rootb">Esperando a que ${currentData.opponentName} presione ¡Jugar!...</text-comp>
+          </div>
          </section>
          <div class="hands">
            <manos-comp></manos-comp>
@@ -75,6 +80,5 @@ export function compartirSala(params) {
 
   div.classList.add("container");
   div.appendChild(style);
-
   return div;
 }

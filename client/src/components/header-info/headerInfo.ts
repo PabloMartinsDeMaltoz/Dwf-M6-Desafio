@@ -1,6 +1,7 @@
 import { state } from "../../../state";
 import map from "lodash/map";
 import filter from "lodash/filter";
+import { Cipher } from "crypto";
 export function headerInfoComp() {
   class headerInfoComp extends HTMLElement {
     constructor() {
@@ -47,37 +48,20 @@ export function headerInfoComp() {
 }
      
      `;
-      let player1 = "offline";
-      let player1Victories = 0;
-      let player2 = "offline";
-      let player2Victories = 0;
-      let currentGame2 = currentData.rtdbData.currentGame;
+    
+      const player1 = currentData.name;
+      const player1Victories = currentData.history[currentData.name]
+        ? currentData.history[currentData.name].score.victorias
+        : 0;
+    
 
-      if (Object.values(currentGame2).length < 2) {
-        console.log("entre");
+      const player2Victories = currentData.history[currentData.opponentName]
+        ? currentData.history[currentData.opponentName].score.victorias
+        : 0;
 
-        const Player1Data = filter(currentGame2, (e) => {
-          return e.name == currentData.name;
-        });
-        console.log(Player1Data);
-        console.log(map(Player1Data).name);
-
-        player1 = Player1Data[0].name;
-        player1Victories = Player1Data[0].hystory.victorias;
-        console.log(Player1Data);
-      } else {
-        const Player1Data = filter(currentGame2, (e) => {
-          return e.name == currentData.name;
-        });
-        const Player2Data = filter(currentGame2, (e) => {
-          return e.name !== currentData.name;
-        });
-        player1 = Player1Data[0].name;
-        player1Victories = Player1Data[0].hystory.victorias;
-
-        player2 = Player2Data[0].name;
-        player2Victories = Player2Data[0].hystory.victorias;
-      }
+      const player2 = currentData.opponentName
+        ? currentData.opponentName
+        : "offline";
 
       divEl.innerHTML = `
          <header class="header">

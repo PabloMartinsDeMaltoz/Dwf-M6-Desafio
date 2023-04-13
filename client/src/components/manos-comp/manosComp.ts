@@ -91,8 +91,8 @@ export function manosComp() {
         divEl.innerHTML = "";
       }
 
-      this.shadow.appendChild(divEl);
       this.shadow.appendChild(style);
+      this.shadow.appendChild(divEl);
     }
   }
   customElements.define("manos-comp", manos);

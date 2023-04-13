@@ -1,8 +1,9 @@
 import { initPageWelcome } from "./src/pages/welcome";
 import { instruction } from "./src/pages/instruction";
-import { initPageC } from "./src/pages/pageC";
-import { initPageD } from "./src/pages/pageD";
+import { initPlay } from "./src/pages/play";
+import { initMoves } from "./src/pages/moves";
 import { initPageE } from "./src/pages/pageE";
+import { waitPlayer } from "./src/pages/waitPlayer";
 import { state } from "./state";
 import { initPageNewGame } from "./src/pages/nuevo-juego";
 import { compartirSala } from "./src/pages/compartirSala";
@@ -41,15 +42,19 @@ const routes = [
   },
   {
     path: /play/,
-    component: initPageC,
+    component: initPlay,
   },
   {
     path: /moves/,
-    component: initPageD,
+    component: initMoves,
   },
   {
     path: /result/,
     component: initPageE,
+  },
+  {
+    path: /wait/,
+    component: waitPlayer,
   },
 ];
 
@@ -72,6 +77,10 @@ export function initRoute(rootEl: Element) {
         if (rootEl.firstChild) {
           rootEl.firstChild.remove();
         }
+        console.log(el);
+        
+        
+        
         rootEl.appendChild(el);
       }
     }

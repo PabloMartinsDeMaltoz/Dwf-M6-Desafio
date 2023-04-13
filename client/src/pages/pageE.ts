@@ -3,7 +3,7 @@ export function initPageE(params) {
   const div = document.createElement("div");
   const style = document.createElement("style");
   const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
-  const data = state.getData();
+  const currentData = state.getData();
 
   style.innerHTML = `
   .root {
@@ -24,11 +24,12 @@ export function initPageE(params) {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap:20px;
 } 
    .text{
      margin-botton:74px;
    }
-   .boton{
+   .boton-jugar .boton-home{
      margin-top:21px;
    }
      .container{
@@ -60,28 +61,69 @@ export function initPageE(params) {
   div.innerHTML = `
   
   <div class="rootE">
-   <star-comp type="${state.data.currentGame}"></star-comp>
-   <score-comp myScore="${state.data.history.victorias}" pcScore="${state.data.history.perdidas}"></score-comp>
-   <button-comp class="boton">Volver a jugar</button-comp>
+   <star-comp type="${currentData.result}"></star-comp>
+   <score-comp myScore="${
+     currentData.history[currentData.name].score.victorias
+   }" pcScore="${
+    currentData.history[currentData.name].score.perdidas
+  }"></score-comp>
+   <button-comp class="boton-jugar">Volver a jugar</button-comp>
+   <button-comp class="boton-home">Home</button-comp>
   </div> 
   <div class="container" >
-     <manos-comp class="pcPlay" size="big" type="${state.data.pcMove}"></manos-comp>
-     <manos-comp class="myPlay" size="big" type="${state.data.myMove}"></manos-comp>
+     <manos-comp class="pcPlay" size="big" type="${
+       currentData.opponentMove
+     }"></manos-comp>
+     <manos-comp class="myPlay" size="big" type="${
+       currentData.myMove
+     }"></manos-comp>
   </div>
   `;
+  console.log("OPPONENT HISTORY");
 
-  const botonEl: any = div.querySelector(".boton");
-  botonEl.addEventListener("click", () => {
+  console.log(currentData.history[currentData.opponentName].score);
+
+  state.setHistory({
+    [currentData.name]: {
+      score: {
+        victorias: currentData.history[currentData.name].score.victorias,
+        perdidas: currentData.history[currentData.name].score.perdidas,
+      },
+    },
+    [currentData.opponentName]: {
+      score: {
+        victorias:
+          currentData.history[currentData.opponentName].score.victorias,
+        perdidas: currentData.history[currentData.opponentName].score.perdidas,
+      },
+    },
+  });
+  state.setStart(false);
+  const botonJugarEl: any = div.querySelector(".boton-jugar");
+  botonJugarEl.addEventListener("click", () => {
+    currentData.myMove = "";
+    currentData.opponentMove = "";
+    state.setData(currentData);
+    state.playersMoves();
     params.goTo("/instruction");
+  });
+  const botonHomeEl: any = div.querySelector(".boton-home");
+  botonHomeEl.addEventListener("click", () => {
+    currentData.myMove = "";
+    currentData.online = "";
+    currentData.opponentMove = "";
+    state.rtdbOnlineOff();
+    state.setData(currentData);
+    params.goTo("/welcome");
   });
 
   div.appendChild(style);
 
-  if (data.currentGame == "victoria") {
+  if (currentData.result == "victoria") {
     div.classList.replace("root" || "rootTie" || "rootLose", "rootWin");
-  } else if (data.currentGame == "perdiste") {
+  } else if (currentData.result == "perdiste") {
     div.classList.replace("root" || "rootTie" || "rootWin", "rootLose");
-  } else if (data.currentGame == "empate") {
+  } else if (currentData.result == "empate") {
     div.classList.replace("root" || "rootWin" || "rootLose", "rootTie");
   }
 

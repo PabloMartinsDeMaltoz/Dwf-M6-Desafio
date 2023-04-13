@@ -24,7 +24,7 @@ export function timerComp() {
             align-items: center;
        }
       `;
-      var number = 4;
+      var number = 6;
       const intervalId = setInterval(() => {
         number--;
         div.innerText = `${number}`;

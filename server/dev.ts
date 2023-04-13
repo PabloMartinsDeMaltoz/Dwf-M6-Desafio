@@ -3,11 +3,17 @@ import * as dotenv from "dotenv";
 import * as cors from "cors";
 import { db, rtdb } from "./db";
 import { getDatabase, ref, onDisconnect } from "firebase/database";
+import { doc, setDoc } from "firebase/firestore";
 import * as path from "path";
 import { nanoid } from "nanoid";
+import map from "lodash/map";
+import * as _ from "lodash";
 import { json } from "node:stream/consumers";
 import { match } from "assert";
 import { LogError } from "concurrently";
+import { error } from "console";
+import { hkdfSync, KeyObject } from "crypto";
+import { matchesProperty } from "lodash";
 
 const rutaRelativa = path.resolve(__dirname, "../dist", "index.html");
 dotenv.config();
@@ -21,6 +27,7 @@ app.use(express.static("dist"));
 
 const userCollection = db.collection("users");
 const roomCollection = db.collection("rooms");
+const historyCollection = db.collection("history");
 
 app.get("/prueba", async (req, res) => {
   const querySnapshot = await userCollection.get();
@@ -41,8 +48,12 @@ app.post("/signup", async (req, res) => {
     newUser.update({ userId: newUser.id, name: name });
     res.status(201).json({ userId: newUser.id });
   } else {
-    console.log("user already exist");
-    res.status(201).json({ userId: consulta.docs[0].data().userId });
+    const values = await consulta.docs;
+    const id = values.forEach((e) => {
+      const data = e.data();
+
+      res.json({ userId: data.userId });
+    });
   }
 });
 
@@ -63,7 +74,6 @@ app.post("/rooms", async (req, res) => {
           name: name,
           start: false,
           choice: "",
-          hystory: { victorias: 0, perdidas: 0 },
         },
       },
     });
@@ -96,6 +106,21 @@ app.get("/rooms/:roomId", async (req, res) => {
     res.status(400).json({ message: "room not found" });
   }
 });
+//Este endpoind confirma si la room existe en la bd
+app.get("/room/:roomId", async (req, res) => {
+  console.log(req.params.roomId);
+
+  const { roomId } = req.params;
+  const consultaRoom = await roomCollection.doc(roomId.toString()).get();
+  if (consultaRoom.exists) {
+    const data = consultaRoom.data();
+
+    res.status(200).json({ message: "Room Existente", data: data });
+  } else {
+    res.status(400).json("no existe esta room");
+  }
+});
+
 //Agrega un player al room existente
 app.post("/rooms/:roomId", async (req, res) => {
   const { roomId } = req.params;
@@ -114,9 +139,37 @@ app.post("/rooms/:roomId", async (req, res) => {
         online: true,
         start: false,
         choice: "",
-        hystory: { victorias: 0, perdidas: 0 },
         name: name,
       },
+    });
+
+    res.status(200).json(data);
+  } else {
+    res.status(400).json({ message: "room not found" });
+  }
+});
+//Este endpoint cambia el estado de online de la realTimeDataBse
+app.post("/playeroff/:roomId", async (req, res) => {
+  const { roomId } = req.params;
+  const { userId } = req.body;
+  console.log(userId);
+  console.log("ESCUCHO EVENTO OFF SERVIDOR", userId);
+
+  const consultaUser = await userCollection.doc(userId.toString()).get();
+  console.log(consultaUser);
+
+  const name = consultaUser.data().name;
+  if (consultaUser.exists) {
+    const consultaRoom = await roomCollection.doc(roomId.toString()).get();
+    const data = await consultaRoom.data();
+    console.log(data);
+
+    const roomRef = await rtdb.ref(
+      "rooms/" + data.rtdbRoomId + "/currentGame/" + "Player" + userId
+    );
+    await roomRef.update({
+      online: false,
+      start: false,
     });
 
     res.status(200).json(data);
@@ -129,7 +182,7 @@ app.post("/rooms/:roomId", async (req, res) => {
 app.post("/setmove", async (req, res) => {
   const { shortId } = req.body;
   const { userId } = req.body;
-  const { jugada } = req.body;
+  const { myMove } = req.body;
 
   const consultaUser = await userCollection.doc(userId.toString()).get();
 
@@ -141,9 +194,9 @@ app.post("/setmove", async (req, res) => {
     const roomRef = await rtdb.ref(
       "rooms/" + data.rtdbRoomId + "/currentGame/" + "Player" + userId
     );
-    console.log(jugada);
+    console.log(myMove);
 
-    await roomRef.update({ choice: jugada });
+    await roomRef.update({ choice: myMove });
 
     const data2 = await roomRef.get();
 
@@ -152,31 +205,68 @@ app.post("/setmove", async (req, res) => {
     res.status(400).json({ message: "room not found" });
   }
 });
-//Setea el score del jugador en la realTimeDB
-app.post("/setscore", async (req, res) => {
-  const { shortId } = req.body;
-  const { userId } = req.body;
-  const { hystory } = req.body;
 
-  const consultaUser = await userCollection.doc(userId.toString()).get();
+//Obtenemos el score de la room
+app.get("/getscore/:shortId", async (req, res) => {
+  const { name } = req.body;
+  console.log(name);
 
-  if (consultaUser.exists) {
-    const consultaRoom = await roomCollection.doc(shortId.toString()).get();
-    const data = await consultaRoom.data();
+  const history = await historyCollection.doc(req.params.shortId).get();
+  if (history.exists) {
+    const data = await history.data();
+    console.log("el historial existente");
+
     console.log(data);
 
-    const roomRef = await rtdb.ref(
-      "rooms/" + data.rtdbRoomId + "/currentGame/" + "Player" + userId
-    );
-    console.log(hystory);
-
-    await roomRef.update({ hystory });
-
-    const data2 = await roomRef.get();
-
-    res.status(200).json(data2);
+    res.status(200).json(data);
   } else {
-    res.status(400).json({ message: "room not found" });
+    res.status(400).json("el historial no existe");
+  }
+});
+
+//Setea el score del jugador en la base de datos
+app.post("/setscore/:shortId", async (req, res) => {
+  const shortId = req.params.shortId;
+  const results = req.body; //Nueva data para sumar en la BD
+  const history = await historyCollection.doc(shortId).get();
+  console.log(history.exists);
+  if (history.exists) {
+    historyCollection.doc(shortId).update(results);
+    res.status(200).json({ message: "Historial is update" });
+  } else {
+    /*
+    _.forIn(dataHistoryBd, (player) => {
+      _.forIn(player, (value, key) => {
+        console.log("soy player");
+        console.log(player);
+        console.log("soy value y key");
+        console.log(value, key);
+        console.log(player[key]);
+
+        if (
+          estadoAndName.name == Object.keys(player) &&
+          (estadoAndName.estado == "victoria" || "perdiste" || "empate")
+        ) {
+          console.log("*****DATAHISTORYBD");
+          console.log(dataHistoryBd);
+          console.log("*****DATAHISTORYBD");
+          console.log("PASE", estadoAndName.name);
+          const estado = estadoAndName.estado;
+          const name = estadoAndName.name;
+          player[name][estado]++;
+          console.log("*****LO QUE VOY A MANDAR");
+
+          console.log(dataHistoryBd);
+          console.log("*****LO QUE VOY A MANDAR");
+
+          historyCollection.doc(shortId).update(player);
+          res.json(dataHistoryBd);
+        }
+      });
+      })
+    */
+    console.log("NO EXITE EL HISTORIAL");
+    const newHistory = await historyCollection.doc(shortId).set(results);
   }
 });
 
@@ -197,13 +287,12 @@ app.post("/setstart", async (req, res) => {
     const roomRef = await rtdb.ref(
       "rooms/" + data.rtdbRoomId + "/currentGame/" + "Player" + userId
     );
-    console.log(start);
 
     await roomRef.update({ start });
 
     const data2 = await roomRef.get();
 
-    res.status(200).json(data2);
+    res.status(200).json({ start: start });
   } else {
     res.status(400).json({ message: "room not found" });
   }

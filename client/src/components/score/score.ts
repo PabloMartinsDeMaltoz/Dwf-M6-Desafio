@@ -1,3 +1,4 @@
+import { state } from "../../../state";
 export function scoreComp() {
   class score extends HTMLElement {
     shadow = this.attachShadow({ mode: "open" });
@@ -7,10 +8,10 @@ export function scoreComp() {
       const style = document.createElement("style");
       const myScore = this.getAttribute("myScore");
       const pcScore = this.getAttribute("pcScore");
+      const currentData = state.getData();
       style.innerHTML = `
     .root{
        width: 259px;
-       height: 217px;
        border: solid 10px black;
        border-radius: 10px;
        background:white;
@@ -34,15 +35,14 @@ export function scoreComp() {
       div.innerHTML = `
       <text-comp class="score" type="score">Score</text-comp>
       <div class="results">
-      <text-comp  class="font" type="score">Vos: ${myScore}</text-comp>
-      <text-comp  class="font" type="score">Maquina: ${pcScore}</text-comp>
+      <text-comp  class="font" type="score">${currentData.name}: ${myScore}</text-comp>
+      <text-comp  class="font" type="score">${currentData.opponentName}: ${pcScore}</text-comp>
       </div>
       `;
 
       this.shadow.appendChild(div);
       this.shadow.appendChild(style);
     }
-    
   }
   customElements.define("score-comp", score);
 }

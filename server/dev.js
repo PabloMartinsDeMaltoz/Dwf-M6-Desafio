@@ -47,9 +47,9 @@ app.post("/rooms", async (req, res) => {
         await roomRef.set({
             currentGame: {
                 ["Player" + userId]: {
-                    online: "true",
+                    online: false,
                     name: name,
-                    start: true,
+                    start: false,
                     choice: "",
                 },
             },
