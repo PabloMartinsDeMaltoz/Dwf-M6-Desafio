@@ -54,7 +54,7 @@ export function initMoves(params) {
 
   state.result(localStor.moves);
   console.log(currentData, "despues del result");
- 
+
   setTimeout(() => {
     params.goTo("/result");
   }, 6000);

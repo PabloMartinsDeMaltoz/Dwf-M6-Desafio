@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initPageFull = void 0;
 function initPageFull(params) {
-    const div = document.createElement("div");
-    const style = document.createElement("style");
-    const bgurl = require("../img/fondohorizontal.png");
-    style.innerHTML = `
+  const div = document.createElement("div");
+  const style = document.createElement("style");
+  const bgurl = require(__dirname + "../img/fondohorizontal.png");
+  style.innerHTML = `
   .root {
   background-image: url(${bgurl});
   margin: 0px;
@@ -41,8 +41,8 @@ function initPageFull(params) {
 }
 
   `;
-    div.classList.add(".root");
-    div.innerHTML = `
+  div.classList.add(".root");
+  div.innerHTML = `
       <text-comp class="text" type="root">Piedra Papel o Tijera</text-comp>
       <div class="container-text"> <text-comp type="rootb">Ups, esta sala está completa y tu nombre no coincide con nadie en la sala.</text-comp></div>
       
@@ -51,8 +51,8 @@ function initPageFull(params) {
        <manos-comp ></manos-comp>
       </div>
   `;
-    div.classList.add("container");
-    div.appendChild(style);
-    return div;
+  div.classList.add("container");
+  div.appendChild(style);
+  return div;
 }
 exports.initPageFull = initPageFull;

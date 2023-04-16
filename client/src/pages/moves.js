@@ -3,15 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initMoves = void 0;
 const state_1 = require("../../state");
 function initMoves(params) {
-    const div = document.createElement("div");
-    const style = document.createElement("style");
-    const bgurl = require("../img/fondohorizontal.png");
-    const currentData = state_1.state.getData();
-    let localStor = JSON.parse(localStorage.getItem("user"));
-    console.log(localStor.moves);
-    console.log(localStor.moves.myMove, localStor.moves.opponentMove, "ESTAS SON LAS JUGADAS");
-    //const result = state.result(localStor.moves);
-    style.innerHTML = `
+  const div = document.createElement("div");
+  const style = document.createElement("style");
+  const bgurl = require(__dirname + "../img/fondohorizontal.png");
+  const currentData = state_1.state.getData();
+  let localStor = JSON.parse(localStorage.getItem("user"));
+  console.log(localStor.moves);
+  console.log(
+    localStor.moves.myMove,
+    localStor.moves.opponentMove,
+    "ESTAS SON LAS JUGADAS"
+  );
+  //const result = state.result(localStor.moves);
+  style.innerHTML = `
       .root {
     background-image: url(${bgurl});
     margin: 0px;
@@ -35,7 +39,7 @@ function initMoves(params) {
       
     }
     `;
-    div.innerHTML = `
+  div.innerHTML = `
    
     
      <div class="container" >
@@ -45,12 +49,12 @@ function initMoves(params) {
    
    
     `;
-    state_1.state.result(localStor.moves);
-    console.log(currentData, "despues del result");
-    setTimeout(() => {
-        params.goTo("/result");
-    }, 6000);
-    div.appendChild(style);
-    return div;
+  state_1.state.result(localStor.moves);
+  console.log(currentData, "despues del result");
+  setTimeout(() => {
+    params.goTo("/result");
+  }, 6000);
+  div.appendChild(style);
+  return div;
 }
 exports.initMoves = initMoves;

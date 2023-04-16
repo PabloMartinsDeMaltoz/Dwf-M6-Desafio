@@ -3,34 +3,39 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.waitPlayer = void 0;
 const state_1 = require("../../state");
 function waitPlayer(params) {
-    const div = document.createElement("div");
-    const style = document.createElement("style");
-    const bgurl = require("../img/fondohorizontal.png");
-    const currentData = state_1.state.getData();
-    function goTo() {
-        state_1.state.listenRtdb(() => {
-            params.goTo("/fullRoom");
-        }, () => {
-            params.goTo("/instruction");
-        }, () => {
-            params.goTo("/compartirSala");
-        }, () => {
-            params.goTo("/play");
-        });
-    }
-    let playersOnStart = state_1.state.playersStart();
-    playersOnStart
-        .then((r) => {
-        return r;
+  const div = document.createElement("div");
+  const style = document.createElement("style");
+  const bgurl = require(__dirname + "../img/fondohorizontal.png");
+  const currentData = state_1.state.getData();
+  function goTo() {
+    state_1.state.listenRtdb(
+      () => {
+        params.goTo("/fullRoom");
+      },
+      () => {
+        params.goTo("/instruction");
+      },
+      () => {
+        params.goTo("/compartirSala");
+      },
+      () => {
+        params.goTo("/play");
+      }
+    );
+  }
+  let playersOnStart = state_1.state.playersStart();
+  playersOnStart
+    .then((r) => {
+      return r;
     })
-        .then((res) => {
-        console.log(res, "SOY LA RES DESDE PAGINA WAIT PLAYER");
-        if (!currentData.history) {
-            state_1.state.getHistory();
-        }
-        goTo();
+    .then((res) => {
+      console.log(res, "SOY LA RES DESDE PAGINA WAIT PLAYER");
+      if (!currentData.history) {
+        state_1.state.getHistory();
+      }
+      goTo();
     });
-    style.innerHTML = `
+  style.innerHTML = `
   .root {
   background-image: url(${bgurl});
   margin: 0px;
@@ -55,7 +60,7 @@ function waitPlayer(params) {
         bottom: -37px;
 }  
 `;
-    div.innerHTML = `
+  div.innerHTML = `
       
       <div class="container">
          <headerinfo-comp></headerinfo-comp>
@@ -69,8 +74,8 @@ function waitPlayer(params) {
          <div>
       </div>
   `;
-    div.classList.add("container");
-    div.appendChild(style);
-    return div;
+  div.classList.add("container");
+  div.appendChild(style);
+  return div;
 }
 exports.waitPlayer = waitPlayer;

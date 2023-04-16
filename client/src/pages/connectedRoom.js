@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initPageConnectedRoom = void 0;
 const state_1 = require("../../state");
 function initPageConnectedRoom(params) {
-    const div = document.createElement("div");
-    const style = document.createElement("style");
-    const bgurl = require("../img/fondohorizontal.png");
-    style.innerHTML = `
+  const div = document.createElement("div");
+  const style = document.createElement("style");
+  const bgurl = require(__dirname + "../img/fondohorizontal.png");
+  style.innerHTML = `
   .root {
   background-image: url(${bgurl});
   margin: 0px;
@@ -52,8 +52,8 @@ function initPageConnectedRoom(params) {
 }
 
   `;
-    div.classList.add(".root");
-    div.innerHTML = `
+  div.classList.add(".root");
+  div.innerHTML = `
   <div class="container">
       <text-comp class="text" type="root">Piedra Papel o Tijera</text-comp>
       <input-comp  class="inputComp"></input-comp>
@@ -62,20 +62,20 @@ function initPageConnectedRoom(params) {
       </div>
   </div>
   `;
-    const formEl = div.querySelector(".form");
-    formEl.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const currentData = state_1.state.getData();
-        const target = e.target;
-        const code = target.name.value;
-        currentData.shortId = code;
-        state_1.state.setData(currentData);
-        state_1.state.getRoom(currentData.shortId, () => {
-            params.goTo("/loginName");
-        });
+  const formEl = div.querySelector(".form");
+  formEl.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const currentData = state_1.state.getData();
+    const target = e.target;
+    const code = target.name.value;
+    currentData.shortId = code;
+    state_1.state.setData(currentData);
+    state_1.state.getRoom(currentData.shortId, () => {
+      params.goTo("/loginName");
     });
-    div.classList.add(".container");
-    div.appendChild(style);
-    return div;
+  });
+  div.classList.add(".container");
+  div.appendChild(style);
+  return div;
 }
 exports.initPageConnectedRoom = initPageConnectedRoom;

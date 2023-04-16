@@ -10,9 +10,9 @@ export function starComp() {
       const style = document.createElement("style");
       const type = this.getAttribute("type");
 
-      const starGreen = require("./img/StarGreen.svg");
-      const starRed = require("./img/StarRed.svg");
-      const StarGray = require("./img/StarGray.svg");
+      const starGreen = require(__dirname+"./img/StarGreen.svg");
+      const starRed = require(__dirname + "./img/StarRed.svg");
+      const StarGray = require(__dirname + "./img/StarGray.svg");
 
       style.innerHTML = `
       

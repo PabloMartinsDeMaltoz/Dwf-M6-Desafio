@@ -16,6 +16,8 @@ export function manosComp() {
       const imagePapel = require("./img/papel.svg");
       const imagePiedra = require("./img/piedra.svg");
       const imageTijera = require("./img/tijera.svg");
+      console.log(imagePapel);
+
       style.innerHTML = `
       .root{
           width:100%;         
@@ -74,20 +76,20 @@ export function manosComp() {
       divEl.classList.add("root");
       divEl.innerHTML = `
       <div class="container">
-      <img class="small" src="${imageTijera.href}"><img>
-      <img class="small" src="${imagePiedra.href}"><img>
-      <img class="small" src="${imagePapel.href}"><img>
+      <img class="small" src="${imageTijera}"><img>
+      <img class="small" src="${imagePiedra}"><img>
+      <img class="small" src="${imagePapel}"><img>
       </div>     
       `;
       if (type == "tijera") {
         divEl.innerHTML = `
-          <img id="tijera" class="${size}" src="${imageTijera.href}"><img>`;
+          <img id="tijera" class="${size}" src="${imageTijera}"><img>`;
       } else if (type == "piedra") {
         divEl.innerHTML = `
-          <img id="piedra"  class="${size}" src="${imagePiedra.href}"><img>`;
+          <img id="piedra"  class="${size}" src="${imagePiedra}"><img>`;
       } else if (type == "papel") {
         divEl.innerHTML = `
-          <img id="papel" class="${size}" src="${imagePapel.href}"><img>`;
+          <img id="papel" class="${size}" src="${imagePapel}"><img>`;
       } else if (type == "") {
         divEl.innerHTML = "";
       }

@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.compartirSala = void 0;
 const state_1 = require("../../state");
 function compartirSala(params) {
-    const div = document.createElement("div");
-    const style = document.createElement("style");
-    const bgurl = require("../img/fondohorizontal.png");
-    const currentData = state_1.state.getData();
-    /* let playersOn = state.playersOnline();
+  const div = document.createElement("div");
+  const style = document.createElement("style");
+  const bgurl = require(__dirname + "../img/fondohorizontal.png");
+  const currentData = state_1.state.getData();
+  /* let playersOn = state.playersOnline();
     playersOn
       .then((r) => {
         return r;
@@ -26,7 +26,7 @@ function compartirSala(params) {
         });
       });
   */
-    style.innerHTML = `
+  style.innerHTML = `
   .root {
   background-image: url(${bgurl});
   margin: 0px;
@@ -54,8 +54,8 @@ function compartirSala(params) {
 }
 
   `;
-    div.classList.add(".root");
-    div.innerHTML = `
+  div.classList.add(".root");
+  div.innerHTML = `
       <div class="container">
          <headerinfo-comp></headerinfo-comp>
          <section class="section">
@@ -70,8 +70,8 @@ function compartirSala(params) {
          <div>
       </div>
   `;
-    div.classList.add("container");
-    div.appendChild(style);
-    return div;
+  div.classList.add("container");
+  div.appendChild(style);
+  return div;
 }
 exports.compartirSala = compartirSala;

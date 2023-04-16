@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initPageLoginName = void 0;
 const state_1 = require("../../state");
 function initPageLoginName(params) {
-    const div = document.createElement("div");
-    const style = document.createElement("style");
-    const bgurl = require("../img/fondohorizontal.png");
-    style.innerHTML = `
+  const div = document.createElement("div");
+  const style = document.createElement("style");
+  const bgurl = require(__dirname + "../img/fondohorizontal.png");
+  style.innerHTML = `
   .root {
   background-image: url(${bgurl});
   margin: 0px;
@@ -40,8 +40,8 @@ function initPageLoginName(params) {
       }
     }
     `;
-    div.classList.add(".root");
-    div.innerHTML = `
+  div.classList.add(".root");
+  div.innerHTML = `
   <div class="container">
       <text-comp class="text" type="root">Piedra Papel o Tijera</text-comp>
       <input-comp  type="nombre" class="inputComp"></input-comp>
@@ -50,38 +50,42 @@ function initPageLoginName(params) {
       </div>
   </div>
   `;
-    function goToCompartirSala() {
-        state_1.state.listenRtdb(() => {
-            params.goTo("/fullRoom");
-        }, () => {
-            params.goTo("/instruction");
-        }, () => {
-            params.goTo("/compartirSala");
-        }, () => {
-            params.goTo("/play");
-        });
+  function goToCompartirSala() {
+    state_1.state.listenRtdb(
+      () => {
+        params.goTo("/fullRoom");
+      },
+      () => {
+        params.goTo("/instruction");
+      },
+      () => {
+        params.goTo("/compartirSala");
+      },
+      () => {
+        params.goTo("/play");
+      }
+    );
+  }
+  async function setNameAndConnectedRoom(name) {
+    let id = await state_1.state.setName(name);
+    if (id.name == "") {
+      alert("este user no esta disponible");
+    } else {
+      state_1.state.setPlayer();
+      let rtdbId = await state_1.state.getRtdb();
+      goToCompartirSala();
     }
-    async function setNameAndConnectedRoom(name) {
-        let id = await state_1.state.setName(name);
-        if (id.name == "") {
-            alert("este user no esta disponible");
-        }
-        else {
-            state_1.state.setPlayer();
-            let rtdbId = await state_1.state.getRtdb();
-            goToCompartirSala();
-        }
-    }
-    const formEl = div.querySelector(".form");
-    formEl.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const currentData = state_1.state.getData();
-        const target = e.target;
-        const name = target.name.value;
-        setNameAndConnectedRoom(name);
-    });
-    div.classList.add(".container");
-    div.appendChild(style);
-    return div;
+  }
+  const formEl = div.querySelector(".form");
+  formEl.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const currentData = state_1.state.getData();
+    const target = e.target;
+    const name = target.name.value;
+    setNameAndConnectedRoom(name);
+  });
+  div.classList.add(".container");
+  div.appendChild(style);
+  return div;
 }
 exports.initPageLoginName = initPageLoginName;

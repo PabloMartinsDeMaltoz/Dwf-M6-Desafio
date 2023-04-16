@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initPageWelcome = void 0;
 function initPageWelcome(params) {
-    const div = document.createElement("div");
-    const style = document.createElement("style");
-    const bgurl = require("../img/fondohorizontal.png");
-    style.innerHTML = `
+  const div = document.createElement("div");
+  const style = document.createElement("style");
+  const bgurl = require(__dirname + "../img/fondohorizontal.png");
+  style.innerHTML = `
   .root {
   background-image: url(${bgurl});
   margin: 0px;
@@ -40,8 +40,8 @@ function initPageWelcome(params) {
 }
 
   `;
-    div.classList.add(".root");
-    div.innerHTML = `
+  div.classList.add(".root");
+  div.innerHTML = `
       <text-comp class="text" type="root">Piedra Papel o Tijera</text-comp>
       <div class="container-button">
       <button-comp class="boton-newgame">Nuevo juego</button-comp>
@@ -51,18 +51,18 @@ function initPageWelcome(params) {
        <manos-comp ></manos-comp>
       </div>
   `;
-    div.classList.add("container");
-    div.appendChild(style);
-    const buttonEl = div.querySelector(".boton-newgame");
-    buttonEl.addEventListener("click", (e) => {
-        e.preventDefault();
-        params.goTo("/newGame");
-    });
-    const buttonElRoom = div.querySelector(".boton-goroom");
-    buttonElRoom.addEventListener("click", (e) => {
-        e.preventDefault();
-        params.goTo("/connectedRoom");
-    });
-    return div;
+  div.classList.add("container");
+  div.appendChild(style);
+  const buttonEl = div.querySelector(".boton-newgame");
+  buttonEl.addEventListener("click", (e) => {
+    e.preventDefault();
+    params.goTo("/newGame");
+  });
+  const buttonElRoom = div.querySelector(".boton-goroom");
+  buttonElRoom.addEventListener("click", (e) => {
+    e.preventDefault();
+    params.goTo("/connectedRoom");
+  });
+  return div;
 }
 exports.initPageWelcome = initPageWelcome;
