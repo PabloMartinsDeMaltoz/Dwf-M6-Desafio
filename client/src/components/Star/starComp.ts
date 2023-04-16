@@ -10,9 +10,9 @@ export function starComp() {
       const style = document.createElement("style");
       const type = this.getAttribute("type");
 
-      const starGreen = require(__dirname+"./img/StarGreen.svg");
-      const starRed = require(__dirname + "./img/StarRed.svg");
-      const StarGray = require(__dirname + "./img/StarGray.svg");
+      const starGreen = require("./img/StarGreen.svg");
+      const starRed = require("./img/StarRed.svg");
+      const StarGray = require("./img/StarGray.svg");
 
       style.innerHTML = `
       
@@ -26,13 +26,13 @@ export function starComp() {
       divEl.style.height = "272px";
       if (type == "perdiste") {
         divEl.innerHTML = `
-        <img src=${starRed.href}><text-comp type="score" class="text">Perdiste</text-comp></img>`;
+        <img src=${starRed}><text-comp type="score" class="text">Perdiste</text-comp></img>`;
       } else if (type == "victoria") {
         divEl.innerHTML = `
-        <img src=${starGreen.href}> <text-comp type="score" class="text">Ganaste</text-comp></img> `;
+        <img src=${starGreen}> <text-comp type="score" class="text">Ganaste</text-comp></img> `;
       } else if (type == "empate") {
         divEl.innerHTML = `
-        <img src=${StarGray.href}> <text-comp type="score" class="text">Empate</text-comp></img> `;
+        <img src=${StarGray}> <text-comp type="score" class="text">Empate</text-comp></img> `;
       }
       this.shadow.appendChild(style);
       this.shadow.appendChild(divEl);
