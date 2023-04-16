@@ -1,11 +1,23 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ES5",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "module": "CommonJS"
-    
-  },
- // "files": ["server/dev.ts"]
+    "module": "CommonJS",
+    "types": ["lodash"],
+    "baseUrl": ".",
+    "paths": {
+      "lodash": ["node_modules/lodash/index.d.ts"]
+    }
+    // "strict": true,
+    // "noImplicitAny": true,
+    //  "strictNullChecks": true,
+    // "esModuleInterop": true,
+    // "skipLibCheck": true,
+    // "forceConsistentCasingInFileNames": true,
+    // "sourceMap": true
+    //"exclude": ["node_modules", "**/*.spec.ts"]
+  }
+  // "files": ["server/dev.ts"]
 }

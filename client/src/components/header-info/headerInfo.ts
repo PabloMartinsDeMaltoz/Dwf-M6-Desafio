@@ -1,7 +1,5 @@
 import { state } from "../../../state";
-import map from "lodash/map";
-import filter from "lodash/filter";
-import { Cipher } from "crypto";
+
 export function headerInfoComp() {
   class headerInfoComp extends HTMLElement {
     constructor() {

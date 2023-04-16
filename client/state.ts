@@ -1,9 +1,6 @@
-import { throws } from "assert";
 import { getDatabase, ref, onValue, app } from "./db";
-import { limitToFirst, onDisconnect } from "firebase/database";
-import map from "lodash/map";
-import filter from "lodash/filter";
-import { callbackify } from "util";
+
+import map from "lodash-es/map";
 
 type move = "piedra" | "papel" | "tijera" | "";
 type game = {

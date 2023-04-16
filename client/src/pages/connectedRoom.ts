@@ -1,4 +1,4 @@
-import { LogError } from "concurrently";
+
 import { state } from "../../state";
 
 export function initPageConnectedRoom(params) {

@@ -2,18 +2,9 @@ import * as express from "express";
 import * as dotenv from "dotenv";
 import * as cors from "cors";
 import { db, rtdb } from "./db";
-import { getDatabase, ref, onDisconnect } from "firebase/database";
-import { doc, setDoc } from "firebase/firestore";
 import * as path from "path";
 import { nanoid } from "nanoid";
-import map from "lodash/map";
 import * as _ from "lodash";
-import { json } from "node:stream/consumers";
-import { match } from "assert";
-import { LogError } from "concurrently";
-import { error } from "console";
-import { hkdfSync, KeyObject } from "crypto";
-import { matchesProperty } from "lodash";
 
 const rutaRelativa = path.resolve(__dirname, "../dist", "index.html");
 dotenv.config();
@@ -234,37 +225,6 @@ app.post("/setscore/:shortId", async (req, res) => {
     historyCollection.doc(shortId).update(results);
     res.status(200).json({ message: "Historial is update" });
   } else {
-    /*
-    _.forIn(dataHistoryBd, (player) => {
-      _.forIn(player, (value, key) => {
-        console.log("soy player");
-        console.log(player);
-        console.log("soy value y key");
-        console.log(value, key);
-        console.log(player[key]);
-
-        if (
-          estadoAndName.name == Object.keys(player) &&
-          (estadoAndName.estado == "victoria" || "perdiste" || "empate")
-        ) {
-          console.log("*****DATAHISTORYBD");
-          console.log(dataHistoryBd);
-          console.log("*****DATAHISTORYBD");
-          console.log("PASE", estadoAndName.name);
-          const estado = estadoAndName.estado;
-          const name = estadoAndName.name;
-          player[name][estado]++;
-          console.log("*****LO QUE VOY A MANDAR");
-
-          console.log(dataHistoryBd);
-          console.log("*****LO QUE VOY A MANDAR");
-
-          historyCollection.doc(shortId).update(player);
-          res.json(dataHistoryBd);
-        }
-      });
-      })
-    */
     console.log("NO EXITE EL HISTORIAL");
     const newHistory = await historyCollection.doc(shortId).set(results);
   }

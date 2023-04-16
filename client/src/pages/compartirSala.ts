@@ -1,6 +1,6 @@
-import { LogError } from "concurrently";
+
 import { state } from "../../state";
-import map from "lodash/map";
+
 
 export function compartirSala(params) {
   const div = document.createElement("div");
