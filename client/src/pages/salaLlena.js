@@ -1,15 +1,54 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.initPageFull = void 0;
-function initPageFull(params) {
-    var div = document.createElement("div");
-    var style = document.createElement("style");
-    var bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
-    style.innerHTML = "\n  .root {\n  background-image: url(".concat(bgurl, ");\n  margin: 0px;\n}\n  .container{\n    width: 100%;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    height: 100vh;\n    justify-content: center;\n}\n  .hands{\n        position: absolute;\n        bottom: -37px;\n  }\n   .text{\n     width: 300px;\n   }\n  \n  .container-text{\n    max-width: 281px;\n    margin-top: 41px;\n    display: flex;\n    flex-direction: column;\n    gap: 20px;\n    text-align: center;   \n    }\n   @media (min-width:769px){\n     .container-button{\n      gap:39px;\n     }\n}\n\n  ");
+export function initPageFull(params) {
+    const div = document.createElement("div");
+    const style = document.createElement("style");
+    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
+    style.innerHTML = `
+  .root {
+  background-image: url(${bgurl});
+  margin: 0px;
+}
+  .container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    justify-content: center;
+}
+  .hands{
+        position: absolute;
+        bottom: -37px;
+  }
+   .text{
+     width: 300px;
+   }
+  
+  .container-text{
+    max-width: 281px;
+    margin-top: 41px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;   
+    }
+   @media (min-width:769px){
+     .container-button{
+      gap:39px;
+     }
+}
+
+  `;
     div.classList.add(".root");
-    div.innerHTML = "\n      <text-comp class=\"text\" type=\"root\">Piedra Papel o Tijera</text-comp>\n      <div class=\"container-text\"> <text-comp type=\"rootb\">Ups, esta sala est\u00E1 completa y tu nombre no coincide con nadie en la sala.</text-comp></div>\n      \n\n      <div class=\"hands\">\n       <manos-comp ></manos-comp>\n      </div>\n  ";
+    div.innerHTML = `
+      <text-comp class="text" type="root">Piedra Papel o Tijera</text-comp>
+      <div class="container-text"> <text-comp type="rootb">Ups, esta sala está completa y tu nombre no coincide con nadie en la sala.</text-comp></div>
+      
+
+      <div class="hands">
+       <manos-comp ></manos-comp>
+      </div>
+  `;
     div.classList.add("container");
     div.appendChild(style);
     return div;
 }
-exports.initPageFull = initPageFull;

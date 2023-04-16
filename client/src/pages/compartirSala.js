@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.compartirSala = void 0;
-var state_1 = require("../../state");
-function compartirSala(params) {
-    var div = document.createElement("div");
-    var style = document.createElement("style");
-    var bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
-    var currentData = state_1.state.getData();
+import { state } from "../../state";
+export function compartirSala(params) {
+    const div = document.createElement("div");
+    const style = document.createElement("style");
+    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
+    const currentData = state.getData();
     /* let playersOn = state.playersOnline();
     playersOn
       .then((r) => {
@@ -26,11 +23,51 @@ function compartirSala(params) {
         });
       });
   */
-    style.innerHTML = "\n  .root {\n  background-image: url(".concat(bgurl, ");\n  margin: 0px;\n}\n  .container{\n    width: 100%;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    height: 100vh;\n    justify-content: space-between;\n}\n  \n.section__codigo{\n  font-family: 'American Typewriter', cursive; \n  font-size:35px;  \n  text-align:center;\n}\n\n  .hands{\n        position: relative;\n        bottom: -37px;\n  }\n   \n}\n\n  ");
+    style.innerHTML = `
+  .root {
+  background-image: url(${bgurl});
+  margin: 0px;
+}
+  .container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    justify-content: space-between;
+}
+  
+.section__codigo{
+  font-family: 'American Typewriter', cursive; 
+  font-size:35px;  
+  text-align:center;
+}
+
+  .hands{
+        position: relative;
+        bottom: -37px;
+  }
+   
+}
+
+  `;
     div.classList.add(".root");
-    div.innerHTML = "\n      <div class=\"container\">\n         <headerinfo-comp></headerinfo-comp>\n         <section class=\"section\">\n           <div class=\"section__codigo\">\n            <p>comparti tu codigo</p>\n            <strong>".concat(currentData.shortId, "</strong>\n            <p>con tu contrincante</p>          \n           </div>\n         </section>\n         <div class=\"hands\">\n           <manos-comp></manos-comp>\n         <div>\n      </div>\n  ");
+    div.innerHTML = `
+      <div class="container">
+         <headerinfo-comp></headerinfo-comp>
+         <section class="section">
+           <div class="section__codigo">
+            <p>comparti tu codigo</p>
+            <strong>${currentData.shortId}</strong>
+            <p>con tu contrincante</p>          
+           </div>
+         </section>
+         <div class="hands">
+           <manos-comp></manos-comp>
+         <div>
+      </div>
+  `;
     div.classList.add("container");
     div.appendChild(style);
     return div;
 }
-exports.compartirSala = compartirSala;

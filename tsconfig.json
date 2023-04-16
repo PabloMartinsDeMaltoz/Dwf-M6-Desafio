@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "module": "CommonJS",
+    "module": "ESNext",
     "types": ["lodash"],
     "baseUrl": ".",
     "paths": {

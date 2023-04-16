@@ -1,6 +1,7 @@
 import { getDatabase, ref, onValue, app } from "./db";
 
 import map from "lodash-es/map";
+import filter from "lodash-es/filter";
 
 type move = "piedra" | "papel" | "tijera" | "";
 type game = {
@@ -164,17 +165,17 @@ export const state = {
     let players = map(currentData.rtdbData.currentGame);
     //console.log(players, "los players existentes");
 
-    let playersMoves = players.filter((e) => {
+    let playersMoves = players.filter((e: any) => {
       return e.choice;
     });
 
     let localStor = JSON.parse(localStorage.getItem("user"));
 
     if (playersMoves.length == 2) {
-      const myPlay = playersMoves.filter((e) => {
+      const myPlay: any = playersMoves.filter((e: any) => {
         return e.name == localStor.name;
       });
-      const opponentMove = playersMoves.filter((e) => {
+      const opponentMove: any = playersMoves.filter((e: any) => {
         return e.name !== localStor.name;
       });
 
@@ -192,7 +193,7 @@ export const state = {
 
     let players = map(currentData.rtdbData.currentGame);
 
-    let playersOnline = players.filter((e) => {
+    let playersOnline = players.filter((e: any) => {
       return e.online;
     });
 
@@ -201,7 +202,7 @@ export const state = {
   async playersStart() {
     const currentData = await this.getData();
     let players = map(currentData.rtdbData.currentGame);
-    let playersStart = players.filter((e) => {
+    let playersStart = players.filter((e: any) => {
       return e.start == true;
     });
 

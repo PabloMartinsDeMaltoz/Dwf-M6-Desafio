@@ -1,52 +1,71 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.headerInfoComp = void 0;
-var state_1 = require("../../../state");
-function headerInfoComp() {
-    var headerInfoComp = /** @class */ (function (_super) {
-        __extends(headerInfoComp, _super);
-        function headerInfoComp() {
-            var _this = _super.call(this) || this;
-            state_1.state.subscribe(function () {
-                _this.connectedCallback();
+import { state } from "../../../state";
+export function headerInfoComp() {
+    class headerInfoComp extends HTMLElement {
+        constructor() {
+            super();
+            state.subscribe(() => {
+                this.connectedCallback();
             });
-            return _this;
         }
-        headerInfoComp.prototype.connectedCallback = function () {
+        connectedCallback() {
             this.render();
-        };
-        headerInfoComp.prototype.render = function () {
-            var currentData = state_1.state.getData();
-            var divEl = document.createElement("div");
-            var style = document.createElement("style");
+        }
+        render() {
+            const currentData = state.getData();
+            const divEl = document.createElement("div");
+            const style = document.createElement("style");
             this.style.width = "100%";
-            style.innerHTML = "\n      .header{\n    display: flex;\n    flex-direction: row;\n    justify-content: space-around;\n    width: 100%;\n    margin-top:31px;\n}\n  .player1{\n    font-family: 'American Typewriter', cursive;\n    font-size:24px;\n    font-weight:600;\n    margin:0px;\n}\n\n  .player2{\n    font-family: 'American Typewriter', cursive;\n    font-size:24px;\n    font-weight:600;\n    color:#FF6442;\n    margin:0px;\n}\n.room{\n    font-family: 'American Typewriter', cursive; \n    font-size:24px;  \n    margin:0px;\n}\n     \n     ";
-            var player1 = currentData.name;
-            var player1Victories = currentData.history[currentData.name]
+            style.innerHTML = `
+      .header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    margin-top:31px;
+}
+  .player1{
+    font-family: 'American Typewriter', cursive;
+    font-size:24px;
+    font-weight:600;
+    margin:0px;
+}
+
+  .player2{
+    font-family: 'American Typewriter', cursive;
+    font-size:24px;
+    font-weight:600;
+    color:#FF6442;
+    margin:0px;
+}
+.room{
+    font-family: 'American Typewriter', cursive; 
+    font-size:24px;  
+    margin:0px;
+}
+     
+     `;
+            const player1 = currentData.name;
+            const player1Victories = currentData.history[currentData.name]
                 ? currentData.history[currentData.name].score.victorias
                 : 0;
-            var player2Victories = currentData.history[currentData.opponentName]
+            const player2Victories = currentData.history[currentData.opponentName]
                 ? currentData.history[currentData.opponentName].score.victorias
                 : 0;
-            var player2 = currentData.opponentName
+            const player2 = currentData.opponentName
                 ? currentData.opponentName
                 : "offline";
-            divEl.innerHTML = "\n         <header class=\"header\">\n           <div class\"header__score\">\n            <p class=\"player1\">".concat(player1, ":").concat(player1Victories, "</p>\n            <p class=\"player2\">").concat(player2, ":").concat(player2Victories, "</p>\n           </div>\n           <div class\"header__room\">\n            <p class=\"player1\">Sala</p>\n            <p class=\"room\">").concat(currentData.shortId, "</p>\n           </div> \n         </header>\n     ");
+            divEl.innerHTML = `
+         <header class="header">
+           <div class"header__score">
+            <p class="player1">${player1}:${player1Victories}</p>
+            <p class="player2">${player2}:${player2Victories}</p>
+           </div>
+           <div class"header__room">
+            <p class="player1">Sala</p>
+            <p class="room">${currentData.shortId}</p>
+           </div> 
+         </header>
+     `;
             if (this.firstChild) {
                 this.lastChild.remove();
                 this.firstChild.remove();
@@ -57,9 +76,7 @@ function headerInfoComp() {
                 this.appendChild(divEl);
                 this.appendChild(style);
             }
-        };
-        return headerInfoComp;
-    }(HTMLElement));
+        }
+    }
     customElements.define("headerinfo-comp", headerInfoComp);
 }
-exports.headerInfoComp = headerInfoComp;
