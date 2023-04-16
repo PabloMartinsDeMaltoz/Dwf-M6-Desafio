@@ -1,10 +1,9 @@
-
 import { state } from "../../state";
 
 export function initPageConnectedRoom(params) {
   const div = document.createElement("div");
   const style = document.createElement("style");
-  const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
+  const bgurl = require("../img/fondohorizontal.png");
   style.innerHTML = `
   .root {
   background-image: url(${bgurl});
@@ -69,7 +68,7 @@ export function initPageConnectedRoom(params) {
     const code = target.name.value;
     currentData.shortId = code;
     state.setData(currentData);
-    
+
     state.getRoom(currentData.shortId, (): any => {
       params.goTo("/loginName");
     });

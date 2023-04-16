@@ -1,8 +1,11 @@
-export function manosComp() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.manosComp = void 0;
+function manosComp() {
     class manos extends HTMLElement {
-        shadow = this.attachShadow({ mode: "open" });
         constructor() {
             super();
+            this.shadow = this.attachShadow({ mode: "open" });
             this.render();
         }
         render() {
@@ -10,9 +13,9 @@ export function manosComp() {
             const style = document.createElement("style");
             const type = this.getAttribute("type");
             const size = this.getAttribute("size");
-            const imagePapel = new URL("./img/papel.svg", import.meta.url);
-            const imagePiedra = new URL("./img/piedra.svg", import.meta.url);
-            const imageTijera = new URL("./img/tijera.svg", import.meta.url);
+            const imagePapel = require("./img/papel.svg");
+            const imagePiedra = require("./img/piedra.svg");
+            const imageTijera = require("./img/tijera.svg");
             style.innerHTML = `
       .root{
           width:100%;         
@@ -96,3 +99,4 @@ export function manosComp() {
     }
     customElements.define("manos-comp", manos);
 }
+exports.manosComp = manosComp;

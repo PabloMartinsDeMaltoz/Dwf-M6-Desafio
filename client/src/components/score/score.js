@@ -1,14 +1,17 @@
-import { state } from "../../../state";
-export function scoreComp() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.scoreComp = void 0;
+const state_1 = require("../../../state");
+function scoreComp() {
     class score extends HTMLElement {
-        shadow = this.attachShadow({ mode: "open" });
         constructor() {
             super();
+            this.shadow = this.attachShadow({ mode: "open" });
             const div = document.createElement("div");
             const style = document.createElement("style");
             const myScore = this.getAttribute("myScore");
             const pcScore = this.getAttribute("pcScore");
-            const currentData = state.getData();
+            const currentData = state_1.state.getData();
             style.innerHTML = `
     .root{
        width: 259px;
@@ -45,3 +48,4 @@ export function scoreComp() {
     }
     customElements.define("score-comp", score);
 }
+exports.scoreComp = scoreComp;

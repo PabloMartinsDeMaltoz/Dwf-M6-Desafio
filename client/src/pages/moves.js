@@ -1,9 +1,12 @@
-import { state } from "../../state";
-export function initMoves(params) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.initMoves = void 0;
+const state_1 = require("../../state");
+function initMoves(params) {
     const div = document.createElement("div");
     const style = document.createElement("style");
-    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
-    const currentData = state.getData();
+    const bgurl = require("../img/fondohorizontal.png");
+    const currentData = state_1.state.getData();
     let localStor = JSON.parse(localStorage.getItem("user"));
     console.log(localStor.moves);
     console.log(localStor.moves.myMove, localStor.moves.opponentMove, "ESTAS SON LAS JUGADAS");
@@ -42,7 +45,7 @@ export function initMoves(params) {
    
    
     `;
-    state.result(localStor.moves);
+    state_1.state.result(localStor.moves);
     console.log(currentData, "despues del result");
     setTimeout(() => {
         params.goTo("/result");
@@ -50,3 +53,4 @@ export function initMoves(params) {
     div.appendChild(style);
     return div;
 }
+exports.initMoves = initMoves;

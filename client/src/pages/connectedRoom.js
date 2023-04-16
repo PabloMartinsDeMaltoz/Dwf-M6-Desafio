@@ -1,8 +1,11 @@
-import { state } from "../../state";
-export function initPageConnectedRoom(params) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.initPageConnectedRoom = void 0;
+const state_1 = require("../../state");
+function initPageConnectedRoom(params) {
     const div = document.createElement("div");
     const style = document.createElement("style");
-    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
+    const bgurl = require("../img/fondohorizontal.png");
     style.innerHTML = `
   .root {
   background-image: url(${bgurl});
@@ -62,12 +65,12 @@ export function initPageConnectedRoom(params) {
     const formEl = div.querySelector(".form");
     formEl.addEventListener("submit", (e) => {
         e.preventDefault();
-        const currentData = state.getData();
+        const currentData = state_1.state.getData();
         const target = e.target;
         const code = target.name.value;
         currentData.shortId = code;
-        state.setData(currentData);
-        state.getRoom(currentData.shortId, () => {
+        state_1.state.setData(currentData);
+        state_1.state.getRoom(currentData.shortId, () => {
             params.goTo("/loginName");
         });
     });
@@ -75,3 +78,4 @@ export function initPageConnectedRoom(params) {
     div.appendChild(style);
     return div;
 }
+exports.initPageConnectedRoom = initPageConnectedRoom;

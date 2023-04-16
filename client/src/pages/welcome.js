@@ -1,7 +1,10 @@
-export function initPageWelcome(params) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.initPageWelcome = void 0;
+function initPageWelcome(params) {
     const div = document.createElement("div");
     const style = document.createElement("style");
-    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
+    const bgurl = require("../img/fondohorizontal.png");
     style.innerHTML = `
   .root {
   background-image: url(${bgurl});
@@ -62,3 +65,4 @@ export function initPageWelcome(params) {
     });
     return div;
 }
+exports.initPageWelcome = initPageWelcome;

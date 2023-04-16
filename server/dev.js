@@ -1,9 +1,11 @@
-import * as express from "express";
-import * as dotenv from "dotenv";
-import * as cors from "cors";
-import { db, rtdb } from "./db";
-import * as path from "path";
-import { nanoid } from "nanoid";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const db_1 = require("./db");
+const path = require("path");
+const nanoid_1 = require("nanoid");
 const rutaRelativa = path.resolve(__dirname, "../dist", "index.html");
 dotenv.config();
 const port = process.env.PORT || 3000;
@@ -11,9 +13,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.static("dist"));
-const userCollection = db.collection("users");
-const roomCollection = db.collection("rooms");
-const historyCollection = db.collection("history");
+const userCollection = db_1.db.collection("users");
+const roomCollection = db_1.db.collection("rooms");
+const historyCollection = db_1.db.collection("history");
 app.get("/prueba", async (req, res) => {
     const querySnapshot = await userCollection.get();
     console.log(querySnapshot.docs[0].data());
@@ -46,7 +48,7 @@ app.post("/rooms", async (req, res) => {
     const consulta = await userCollection.doc(userId.toString()).get();
     if (consulta.exists) {
         const shortId = (1000 + Math.floor(Math.random() * 999));
-        const roomRef = await rtdb.ref("rooms/" + nanoid());
+        const roomRef = await db_1.rtdb.ref("rooms/" + (0, nanoid_1.nanoid)());
         roomRef.set({
             currentGame: {
                 ["Player" + userId]: {
@@ -105,7 +107,7 @@ app.post("/rooms/:roomId", async (req, res) => {
         const consultaRoom = await roomCollection.doc(roomId.toString()).get();
         const data = await consultaRoom.data();
         console.log(data);
-        const roomRef = await rtdb.ref("rooms/" + data.rtdbRoomId + "/currentGame");
+        const roomRef = await db_1.rtdb.ref("rooms/" + data.rtdbRoomId + "/currentGame");
         await roomRef.update({
             ["Player" + userId]: {
                 online: true,
@@ -133,7 +135,7 @@ app.post("/playeroff/:roomId", async (req, res) => {
         const consultaRoom = await roomCollection.doc(roomId.toString()).get();
         const data = await consultaRoom.data();
         console.log(data);
-        const roomRef = await rtdb.ref("rooms/" + data.rtdbRoomId + "/currentGame/" + "Player" + userId);
+        const roomRef = await db_1.rtdb.ref("rooms/" + data.rtdbRoomId + "/currentGame/" + "Player" + userId);
         await roomRef.update({
             online: false,
             start: false,
@@ -154,7 +156,7 @@ app.post("/setmove", async (req, res) => {
         const consultaRoom = await roomCollection.doc(shortId.toString()).get();
         const data = await consultaRoom.data();
         console.log(data);
-        const roomRef = await rtdb.ref("rooms/" + data.rtdbRoomId + "/currentGame/" + "Player" + userId);
+        const roomRef = await db_1.rtdb.ref("rooms/" + data.rtdbRoomId + "/currentGame/" + "Player" + userId);
         console.log(myMove);
         await roomRef.update({ choice: myMove });
         const data2 = await roomRef.get();
@@ -204,7 +206,7 @@ app.post("/setstart", async (req, res) => {
         const consultaRoom = await roomCollection.doc(shortId.toString()).get();
         const data = await consultaRoom.data();
         console.log(data);
-        const roomRef = await rtdb.ref("rooms/" + data.rtdbRoomId + "/currentGame/" + "Player" + userId);
+        const roomRef = await db_1.rtdb.ref("rooms/" + data.rtdbRoomId + "/currentGame/" + "Player" + userId);
         await roomRef.update({ start });
         const data2 = await roomRef.get();
         res.status(200).json({ start: start });

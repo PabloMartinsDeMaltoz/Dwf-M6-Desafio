@@ -1,7 +1,10 @@
-import { getDatabase, ref, onValue, app } from "./db";
-import map from "lodash-es/map";
-import filter from "lodash-es/filter";
-export const state = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.state = void 0;
+const db_1 = require("./db");
+const map_1 = require("lodash-es/map");
+const filter_1 = require("lodash-es/filter");
+exports.state = {
     data: {
         myMove: "",
         opponentMove: "",
@@ -36,9 +39,9 @@ export const state = {
     timer: "open",
     listenRtdb(callbackFullRoom, callbackInstrucciones, callbackCompSala, callbackPlay) {
         const currentData = this.getData();
-        const db = getDatabase(app);
-        const roomRef = ref(db, "rooms/" + currentData.rtdbRoomId);
-        onValue(roomRef, (snapshot) => {
+        const db = (0, db_1.getDatabase)(db_1.app);
+        const roomRef = (0, db_1.ref)(db, "rooms/" + currentData.rtdbRoomId);
+        (0, db_1.onValue)(roomRef, (snapshot) => {
             const data = snapshot.val();
             currentData.rtdbData = data;
             let localStor = JSON.parse(localStorage.getItem("user"));
@@ -137,7 +140,7 @@ export const state = {
     },
     async playersMoves() {
         const currentData = await this.getData();
-        let players = map(currentData.rtdbData.currentGame);
+        let players = (0, map_1.default)(currentData.rtdbData.currentGame);
         //console.log(players, "los players existentes");
         let playersMoves = players.filter((e) => {
             return e.choice;
@@ -153,14 +156,14 @@ export const state = {
             currentData.myMove = myPlay[0].choice;
             currentData.opponentMove = opponentMove[0].choice;
             currentData.opponentName = opponentMove[0].name;
-            state.setData(currentData);
-            state.getData();
+            exports.state.setData(currentData);
+            exports.state.getData();
         }
         return playersMoves;
     },
     async playersOnline() {
         const currentData = await this.getData();
-        let players = map(currentData.rtdbData.currentGame);
+        let players = (0, map_1.default)(currentData.rtdbData.currentGame);
         let playersOnline = players.filter((e) => {
             return e.online;
         });
@@ -168,7 +171,7 @@ export const state = {
     },
     async playersStart() {
         const currentData = await this.getData();
-        let players = map(currentData.rtdbData.currentGame);
+        let players = (0, map_1.default)(currentData.rtdbData.currentGame);
         let playersStart = players.filter((e) => {
             return e.start == true;
         });
@@ -186,7 +189,7 @@ export const state = {
             .then((res) => res.json())
             .then((data) => {
             currentData.roomFull = true;
-            state.setData(currentData);
+            exports.state.setData(currentData);
         });
     },
     setStart(estado, callbackWait) {
@@ -259,7 +262,7 @@ export const state = {
         })
             .then((data) => {
             currentData.myMove = data.choice;
-            state.setData(currentData);
+            exports.state.setData(currentData);
         })
             .catch((err) => {
             console.log(err);
@@ -291,7 +294,7 @@ export const state = {
     getOpponnetInfo() {
         const currentData = this.getData();
         const currentGame = currentData.rtdbData.currentGame;
-        const opponent = filter(currentGame, (e) => {
+        const opponent = (0, filter_1.default)(currentGame, (e) => {
             return e.name !== currentData.name;
         });
         const opponentName = opponent[0].name;

@@ -1,9 +1,12 @@
-import { state } from "../../state";
-export function initPageE(params) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.initPageE = void 0;
+const state_1 = require("../../state");
+function initPageE(params) {
     const div = document.createElement("div");
     const style = document.createElement("style");
-    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
-    const currentData = state.getData();
+    const bgurl = require("../img/fondohorizontal.png");
+    const currentData = state_1.state.getData();
     style.innerHTML = `
   .root {
   
@@ -72,7 +75,7 @@ export function initPageE(params) {
   `;
     console.log("OPPONENT HISTORY");
     console.log(currentData.history[currentData.opponentName].score);
-    state.setHistory({
+    state_1.state.setHistory({
         [currentData.name]: {
             score: {
                 victorias: currentData.history[currentData.name].score.victorias,
@@ -86,13 +89,13 @@ export function initPageE(params) {
             },
         },
     });
-    state.setStart(false);
+    state_1.state.setStart(false);
     const botonJugarEl = div.querySelector(".boton-jugar");
     botonJugarEl.addEventListener("click", () => {
         currentData.myMove = "";
         currentData.opponentMove = "";
-        state.setData(currentData);
-        state.playersMoves();
+        state_1.state.setData(currentData);
+        state_1.state.playersMoves();
         params.goTo("/instruction");
     });
     const botonHomeEl = div.querySelector(".boton-home");
@@ -100,8 +103,8 @@ export function initPageE(params) {
         currentData.myMove = "";
         currentData.online = "";
         currentData.opponentMove = "";
-        state.rtdbOnlineOff();
-        state.setData(currentData);
+        state_1.state.rtdbOnlineOff();
+        state_1.state.setData(currentData);
         params.goTo("/welcome");
     });
     div.appendChild(style);
@@ -116,3 +119,4 @@ export function initPageE(params) {
     }
     return div;
 }
+exports.initPageE = initPageE;

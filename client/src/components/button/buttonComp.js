@@ -1,8 +1,11 @@
-export function buttonComp() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.buttonComp = void 0;
+function buttonComp() {
     class button extends HTMLElement {
-        shadow = this.attachShadow({ mode: "open" });
         constructor() {
             super();
+            this.shadow = this.attachShadow({ mode: "open" });
             this.render();
         }
         render() {
@@ -29,3 +32,4 @@ export function buttonComp() {
     }
     customElements.define("button-comp", button);
 }
+exports.buttonComp = buttonComp;

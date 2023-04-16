@@ -1,12 +1,15 @@
-import * as admin from "firebase-admin";
-import * as key from "../key.json";
-import { initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-import { getDatabase } from "firebase-admin/database";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.rtdb = exports.db = void 0;
+const admin = require("firebase-admin");
+const key = require("../key.json");
+const app_1 = require("firebase-admin/app");
+const firestore_1 = require("firebase-admin/firestore");
+const database_1 = require("firebase-admin/database");
 const clave = key;
-initializeApp({
+(0, app_1.initializeApp)({
     credential: admin.credential.cert(clave),
     databaseURL: "https://piedra-papel-tijera-desafio6-default-rtdb.firebaseio.com",
 });
-export const db = getFirestore();
-export const rtdb = getDatabase();
+exports.db = (0, firestore_1.getFirestore)();
+exports.rtdb = (0, database_1.getDatabase)();

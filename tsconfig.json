@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2020",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "module": "ESNext",
+    "module": "CommonJS",
     "types": ["lodash"],
     "baseUrl": ".",
     "paths": {
       "lodash": ["node_modules/lodash/index.d.ts"]
     }
+
     // "strict": true,
     // "noImplicitAny": true,
     //  "strictNullChecks": true,

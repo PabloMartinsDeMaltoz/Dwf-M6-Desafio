@@ -6,7 +6,7 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "dev:front": "parcel serve  ./client/index.html",
-    "dev:backend": "nodemon --watch ./server --exec ts-node ./server/dev.ts",
+    "dev:backend": "nodemon --watch ./server --exec ts-node  ./server/dev.ts",
     "build:front": "parcel build  ./client/index.html",
     "build:backend": "tsc",
     "dev": "yarn concurrently \"yarn dev:front\" \"yarn dev:backend\"",
@@ -32,7 +32,6 @@
   },
   "devDependencies": {
     "@parcel/config-default": "^2.8.3",
-    "@parcel/transformer-raw": "^2.8.3",
     "@parcel/transformer-typescript-tsc": "^2.8.3",
     "@types/cors": "^2.8.12",
     "@types/lodash": "^4.14.194",

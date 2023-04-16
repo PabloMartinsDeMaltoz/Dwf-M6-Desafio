@@ -1,61 +1,64 @@
-import { initPageWelcome } from "./src/pages/welcome";
-import { instruction } from "./src/pages/instruction";
-import { initPlay } from "./src/pages/play";
-import { initMoves } from "./src/pages/moves";
-import { initPageE } from "./src/pages/pageE";
-import { waitPlayer } from "./src/pages/waitPlayer";
-import { initPageNewGame } from "./src/pages/nuevo-juego";
-import { compartirSala } from "./src/pages/compartirSala";
-import { initPageConnectedRoom } from "./src/pages/connectedRoom";
-import { initPageLoginName } from "./src/pages/loginName";
-import { initPageFull } from "./src/pages/salaLlena";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.initRoute = void 0;
+const welcome_1 = require("./src/pages/welcome");
+const instruction_1 = require("./src/pages/instruction");
+const play_1 = require("./src/pages/play");
+const moves_1 = require("./src/pages/moves");
+const pageE_1 = require("./src/pages/pageE");
+const waitPlayer_1 = require("./src/pages/waitPlayer");
+const nuevo_juego_1 = require("./src/pages/nuevo-juego");
+const compartirSala_1 = require("./src/pages/compartirSala");
+const connectedRoom_1 = require("./src/pages/connectedRoom");
+const loginName_1 = require("./src/pages/loginName");
+const salaLlena_1 = require("./src/pages/salaLlena");
 const routes = [
     {
         path: /welcome/,
-        component: initPageWelcome,
+        component: welcome_1.initPageWelcome,
     },
     {
         path: /newGame/,
-        component: initPageNewGame,
+        component: nuevo_juego_1.initPageNewGame,
     },
     {
         path: /connectedRoom/,
-        component: initPageConnectedRoom,
+        component: connectedRoom_1.initPageConnectedRoom,
     },
     {
         path: /loginName/,
-        component: initPageLoginName,
+        component: loginName_1.initPageLoginName,
     },
     {
         path: /compartirSala/,
-        component: compartirSala,
+        component: compartirSala_1.compartirSala,
     },
     {
         path: /fullRoom/,
-        component: initPageFull,
+        component: salaLlena_1.initPageFull,
     },
     {
         path: /instruction/,
-        component: instruction,
+        component: instruction_1.instruction,
     },
     {
         path: /play/,
-        component: initPlay,
+        component: play_1.initPlay,
     },
     {
         path: /moves/,
-        component: initMoves,
+        component: moves_1.initMoves,
     },
     {
         path: /result/,
-        component: initPageE,
+        component: pageE_1.initPageE,
     },
     {
         path: /wait/,
-        component: waitPlayer,
+        component: waitPlayer_1.waitPlayer,
     },
 ];
-export function initRoute(rootEl) {
+function initRoute(rootEl) {
     function goTo(path) {
         history.pushState({}, "", path);
         window.onpopstate = function () {
@@ -84,3 +87,4 @@ export function initRoute(rootEl) {
         handleRoute(location.pathname);
     }
 }
+exports.initRoute = initRoute;

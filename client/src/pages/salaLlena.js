@@ -1,7 +1,10 @@
-export function initPageFull(params) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.initPageFull = void 0;
+function initPageFull(params) {
     const div = document.createElement("div");
     const style = document.createElement("style");
-    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
+    const bgurl = require("../img/fondohorizontal.png");
     style.innerHTML = `
   .root {
   background-image: url(${bgurl});
@@ -52,3 +55,4 @@ export function initPageFull(params) {
     div.appendChild(style);
     return div;
 }
+exports.initPageFull = initPageFull;

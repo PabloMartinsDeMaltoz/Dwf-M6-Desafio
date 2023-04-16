@@ -1,9 +1,12 @@
-import { state } from "../../state";
-export function initPlay(params) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.initPlay = void 0;
+const state_1 = require("../../state");
+function initPlay(params) {
     const div = document.createElement("div");
     const style = document.createElement("style");
-    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
-    const currentData = state.getData();
+    const bgurl = require("../img/fondohorizontal.png");
+    const currentData = state_1.state.getData();
     style.innerHTML = `
    .root {
   background-image: url(${bgurl});
@@ -56,14 +59,14 @@ export function initPlay(params) {
    </div> 
   </div>
   `;
-    state.setMyMove("");
+    state_1.state.setMyMove("");
     const opcionElejida = div.getElementsByTagName("manos-comp");
     const timer = div.getElementsByTagName("timer-comp");
     for (const op of opcionElejida) {
         op.addEventListener("click", (e) => {
             let myMove = e.target.getAttribute("type") || "";
-            state.setMyMove(myMove);
-            if (state.timer == "closed") {
+            state_1.state.setMyMove(myMove);
+            if (state_1.state.timer == "closed") {
                 params.goTo("/moves");
             }
         });
@@ -71,7 +74,7 @@ export function initPlay(params) {
     timer[0].addEventListener("timer", (e) => {
         if ((e.detail.timer == "closed" && currentData.myMove == "") ||
             currentData.opponentMove == "") {
-            state.setStart(false);
+            state_1.state.setStart(false);
             currentData.myMove = "";
             currentData.opponentMove = "";
             params.goTo("/instruction");
@@ -89,3 +92,4 @@ export function initPlay(params) {
     div.appendChild(style);
     return div;
 }
+exports.initPlay = initPlay;

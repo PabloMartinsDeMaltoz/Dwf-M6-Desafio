@@ -1,3 +1,5 @@
+import { url } from "inspector";
+
 export function manosComp() {
   class manos extends HTMLElement {
     shadow = this.attachShadow({ mode: "open" });
@@ -11,10 +13,9 @@ export function manosComp() {
       const type = this.getAttribute("type");
       const size = this.getAttribute("size");
 
-      const imagePapel = new URL("./img/papel.svg", import.meta.url);
-      const imagePiedra = new URL("./img/piedra.svg", import.meta.url);
-      const imageTijera = new URL("./img/tijera.svg", import.meta.url);
-
+      const imagePapel = require("./img/papel.svg");
+      const imagePiedra = require("./img/piedra.svg");
+      const imageTijera = require("./img/tijera.svg");
       style.innerHTML = `
       .root{
           width:100%;         

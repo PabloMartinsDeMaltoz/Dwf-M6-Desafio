@@ -1,8 +1,11 @@
-export function timerComp() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.timerComp = void 0;
+function timerComp() {
     class timer extends HTMLElement {
-        shadow = this.attachShadow({ mode: "open" });
         constructor() {
             super();
+            this.shadow = this.attachShadow({ mode: "open" });
         }
         connectedCallback() {
             this.render();
@@ -46,3 +49,4 @@ export function timerComp() {
     }
     customElements.define("timer-comp", timer);
 }
+exports.timerComp = timerComp;

@@ -1,8 +1,11 @@
-import { state } from "../../state";
-export function initPageNewGame(params) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.initPageNewGame = void 0;
+const state_1 = require("../../state");
+function initPageNewGame(params) {
     const div = document.createElement("div");
     const style = document.createElement("style");
-    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
+    const bgurl = require("../img/fondohorizontal.png");
     style.innerHTML = `
   .root {
   background-image: url(${bgurl});
@@ -48,7 +51,7 @@ export function initPageNewGame(params) {
       </div>
   `;
     function goTo() {
-        state.listenRtdb(() => {
+        state_1.state.listenRtdb(() => {
             params.goTo("/fullRoom");
         }, () => {
             params.goTo("/instruction");
@@ -59,14 +62,14 @@ export function initPageNewGame(params) {
         });
     }
     async function setNameRoom(name) {
-        let id = await state.setName(name);
+        let id = await state_1.state.setName(name);
         if (id.name == "") {
             alert("este user no esta disponible");
         }
         else {
-            let shortId = await state.newRoom();
-            let rtdbId = await state.getRtdb();
-            state.getHistory();
+            let shortId = await state_1.state.newRoom();
+            let rtdbId = await state_1.state.getRtdb();
+            state_1.state.getHistory();
             goTo();
         }
     }
@@ -81,3 +84,4 @@ export function initPageNewGame(params) {
     div.appendChild(style);
     return div;
 }
+exports.initPageNewGame = initPageNewGame;

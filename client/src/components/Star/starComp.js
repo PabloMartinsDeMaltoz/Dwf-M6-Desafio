@@ -1,17 +1,20 @@
-export function starComp() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.starComp = void 0;
+function starComp() {
     class star extends HTMLElement {
-        shadow = this.attachShadow({ mode: "open" });
         constructor() {
             super();
+            this.shadow = this.attachShadow({ mode: "open" });
             this.render();
         }
         render() {
             const divEl = document.createElement("div");
             const style = document.createElement("style");
             const type = this.getAttribute("type");
-            const starGreen = new URL("./img/StarGreen.svg", import.meta.url);
-            const starRed = new URL("./img/StarRed.svg", import.meta.url);
-            const StarGray = new URL("./img/StarGray.svg", import.meta.url);
+            const starGreen = require("./img/StarGreen.svg");
+            const starRed = require("./img/StarRed.svg");
+            const StarGray = require("./img/StarGray.svg");
             style.innerHTML = `
       
       .text{         
@@ -40,3 +43,4 @@ export function starComp() {
     }
     customElements.define("star-comp", star);
 }
+exports.starComp = starComp;

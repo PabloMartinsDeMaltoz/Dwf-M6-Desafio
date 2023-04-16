@@ -1,11 +1,14 @@
-import { state } from "../../state";
-export function waitPlayer(params) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.waitPlayer = void 0;
+const state_1 = require("../../state");
+function waitPlayer(params) {
     const div = document.createElement("div");
     const style = document.createElement("style");
-    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
-    const currentData = state.getData();
+    const bgurl = require("../img/fondohorizontal.png");
+    const currentData = state_1.state.getData();
     function goTo() {
-        state.listenRtdb(() => {
+        state_1.state.listenRtdb(() => {
             params.goTo("/fullRoom");
         }, () => {
             params.goTo("/instruction");
@@ -15,7 +18,7 @@ export function waitPlayer(params) {
             params.goTo("/play");
         });
     }
-    let playersOnStart = state.playersStart();
+    let playersOnStart = state_1.state.playersStart();
     playersOnStart
         .then((r) => {
         return r;
@@ -23,7 +26,7 @@ export function waitPlayer(params) {
         .then((res) => {
         console.log(res, "SOY LA RES DESDE PAGINA WAIT PLAYER");
         if (!currentData.history) {
-            state.getHistory();
+            state_1.state.getHistory();
         }
         goTo();
     });
@@ -70,3 +73,4 @@ export function waitPlayer(params) {
     div.appendChild(style);
     return div;
 }
+exports.waitPlayer = waitPlayer;

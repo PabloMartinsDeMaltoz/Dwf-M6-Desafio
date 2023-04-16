@@ -1,8 +1,11 @@
-export function titleComp() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.titleComp = void 0;
+function titleComp() {
     class title extends HTMLElement {
-        shadow = this.attachShadow({ mode: "open" });
         constructor() {
             super();
+            this.shadow = this.attachShadow({ mode: "open" });
             this.render();
         }
         render() {
@@ -62,3 +65,4 @@ export function titleComp() {
     }
     customElements.define("text-comp", title);
 }
+exports.titleComp = titleComp;

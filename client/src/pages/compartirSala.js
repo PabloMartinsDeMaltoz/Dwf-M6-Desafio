@@ -1,9 +1,12 @@
-import { state } from "../../state";
-export function compartirSala(params) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.compartirSala = void 0;
+const state_1 = require("../../state");
+function compartirSala(params) {
     const div = document.createElement("div");
     const style = document.createElement("style");
-    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
-    const currentData = state.getData();
+    const bgurl = require("../img/fondohorizontal.png");
+    const currentData = state_1.state.getData();
     /* let playersOn = state.playersOnline();
     playersOn
       .then((r) => {
@@ -71,3 +74,4 @@ export function compartirSala(params) {
     div.appendChild(style);
     return div;
 }
+exports.compartirSala = compartirSala;

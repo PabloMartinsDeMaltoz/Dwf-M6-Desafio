@@ -3,7 +3,7 @@ import { state } from "../../state";
 export function instruction(params) {
   const div = document.createElement("div");
   const style = document.createElement("style");
-  const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
+  const bgurl = require("../img/fondohorizontal.png");
   style.innerHTML = `
     .root {
   background-image: url(${bgurl});

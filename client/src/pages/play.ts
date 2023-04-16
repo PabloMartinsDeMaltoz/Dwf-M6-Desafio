@@ -2,7 +2,7 @@ import { state } from "../../state";
 export function initPlay(params) {
   const div = document.createElement("div");
   const style = document.createElement("style");
-  const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
+  const bgurl = require("../img/fondohorizontal.png");
   const currentData = state.getData();
   type move = "piedra" | "papel" | "tijera";
   style.innerHTML = `

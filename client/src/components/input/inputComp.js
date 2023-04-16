@@ -1,4 +1,7 @@
-export function inputComp() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.inputComp = void 0;
+function inputComp() {
     class inputComp extends HTMLElement {
         //shadow = this.attachShadow({ mode: "open" });
         constructor() {
@@ -80,3 +83,4 @@ export function inputComp() {
     }
     customElements.define("input-comp", inputComp);
 }
+exports.inputComp = inputComp;

@@ -1,8 +1,11 @@
-import { state } from "../../state";
-export function instruction(params) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.instruction = void 0;
+const state_1 = require("../../state");
+function instruction(params) {
     const div = document.createElement("div");
     const style = document.createElement("style");
-    const bgurl = new URL("../img/fondohorizontal.png", import.meta.url);
+    const bgurl = require("../img/fondohorizontal.png");
     style.innerHTML = `
     .root {
   background-image: url(${bgurl});
@@ -39,13 +42,13 @@ export function instruction(params) {
   <manos-comp ></manos-comp>
   </div>
   `;
-    state.getOpponnetInfo();
-    state.getHistory();
+    state_1.state.getOpponnetInfo();
+    state_1.state.getHistory();
     const buttonEl = div.querySelector(".boton");
     buttonEl.addEventListener("click", (e) => {
         e.preventDefault();
-        const currentData = state.getData();
-        state.setStart(true, () => {
+        const currentData = state_1.state.getData();
+        state_1.state.setStart(true, () => {
             params.goTo("/wait");
         });
     });
@@ -53,3 +56,4 @@ export function instruction(params) {
     div.appendChild(style);
     return div;
 }
+exports.instruction = instruction;

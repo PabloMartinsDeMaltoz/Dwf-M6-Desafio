@@ -1,9 +1,12 @@
-import { state } from "../../../state";
-export function headerInfoComp() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.headerInfoComp = void 0;
+const state_1 = require("../../../state");
+function headerInfoComp() {
     class headerInfoComp extends HTMLElement {
         constructor() {
             super();
-            state.subscribe(() => {
+            state_1.state.subscribe(() => {
                 this.connectedCallback();
             });
         }
@@ -11,7 +14,7 @@ export function headerInfoComp() {
             this.render();
         }
         render() {
-            const currentData = state.getData();
+            const currentData = state_1.state.getData();
             const divEl = document.createElement("div");
             const style = document.createElement("style");
             this.style.width = "100%";
@@ -80,3 +83,4 @@ export function headerInfoComp() {
     }
     customElements.define("headerinfo-comp", headerInfoComp);
 }
+exports.headerInfoComp = headerInfoComp;
