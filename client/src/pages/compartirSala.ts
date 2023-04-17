@@ -7,25 +7,6 @@ export function compartirSala(params) {
 
   const currentData = state.getData();
 
-  /* let playersOn = state.playersOnline();
-  playersOn
-    .then((r) => {
-      return r;
-    })
-    .then((res) => {
-      console.log(res);
-      state.subscribe(() => {
-        if (res.length == 2) {
-          console.log("se lleno podemos jugar");
-          currentData.roomFull = true;
-          state.setData(currentData);
-          console.log(currentData);
-
-       //   params.goTo("/instruction");
-        }
-      });
-    });
-*/
   style.innerHTML = `
   .root {
   background-image: url(${bgurl});

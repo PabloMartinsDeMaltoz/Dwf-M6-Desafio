@@ -112,6 +112,8 @@ export function initPageE(params) {
     currentData.myMove = "";
     currentData.online = "";
     currentData.opponentMove = "";
+    currentData.opponentName = "";
+    currentData.shortId = 0;
     state.rtdbOnlineOff();
     state.setData(currentData);
     params.goTo("/welcome");

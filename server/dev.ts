@@ -143,11 +143,8 @@ app.post("/rooms/:roomId", async (req, res) => {
 app.post("/playeroff/:roomId", async (req, res) => {
   const { roomId } = req.params;
   const { userId } = req.body;
-  console.log(userId);
-  console.log("ESCUCHO EVENTO OFF SERVIDOR", userId);
-
+  
   const consultaUser = await userCollection.doc(userId.toString()).get();
-  console.log(consultaUser);
 
   const name = consultaUser.data().name;
   if (consultaUser.exists) {
